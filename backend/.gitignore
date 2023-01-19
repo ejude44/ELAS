@@ -141,3 +141,4 @@ bin/study_programs.js
 #test scripts
 orm_interface/query_test.py
 test.py
+.vscode/

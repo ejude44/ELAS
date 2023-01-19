@@ -1,0 +1,29 @@
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  width: 200px;
+  background-color: #ffff;
+}
+
+li NavLink {
+  display: block;
+  color: rgb(2, 1, 4);
+  padding: 8px 16px;
+  text-decoration: none;
+}
+
+li NavLink.active {
+  background-color: #04aa6d;
+  color: white;
+}
+
+li Navlink:hover:not(.active) {
+  background-color: blue;
+  color: white;
+}
+
+div Drawer {
+  display: "flex";
+  z-index: -1;
+}

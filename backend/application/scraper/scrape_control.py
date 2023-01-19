@@ -73,6 +73,7 @@ def run(config, insight_url, e3_url):
 
     os.chdir(vdb_scraper_directory)
     subprocess.call(f"scrapy crawl vdb-scraper -o description_results.json", shell=True)
+    # subprocess.call(f"scrapy crawl vdb-scraper -a all_engineering_studyprograms=True -o description_results.json", shell=True)
 
     # 2. process both sets of data
     LsfDataProcessing = ProcessLsfData()

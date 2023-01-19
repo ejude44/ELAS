@@ -3,11 +3,15 @@ from flask_jwt_extended import create_access_token
 from .extensions import bcrypt
 from dotenv import load_dotenv
 import os
+import yaml
+from multiprocessing import Process
 load_dotenv()
+from datetime import datetime, timedelta
 
 from orm_interface.entities.user import User
 from orm_interface.base import Base, Session, engine
 from orm_interface.entities.e3_entity.e3_courses import E3_Courses, E3_Rating
+from .scraper.scrape_control import run
 
 main = Blueprint("main", __name__)
 
@@ -27,7 +31,7 @@ def adminUser():
     if user is None:
         hash_password = bcrypt.generate_password_hash(password).decode("utf-8")
         new_user = User(
-            firstname=firstname, lastname=lastname, email=email, password=hash_password
+            firstname=firstname, lastname=lastname, email=email, password=hash_password,degree="",birthday="", description="", profile_image="", skills="",
         )
         session.add(new_user)
         session.commit()
@@ -53,9 +57,11 @@ def login():
                     "firstname": user.firstname,
                     "lastname": user.lastname,
                     "email": user.email,
-                }
+                    "id": user.id
+                },expires_delta=timedelta(days=10.5),fresh=True
             )
-            return jsonify({"token": access_token})
+            refresh_token =  create_access_token(identity={'id': user.id},fresh=False)
+            return jsonify({"token": access_token, "refresh_token": refresh_token})
         else:
             return jsonify({"error": "Wrong password!"})
 
@@ -72,7 +78,8 @@ def register():
     if user is None:
         hash_password = bcrypt.generate_password_hash(password).decode("utf-8")
         new_user = User(
-            firstname=firstname, lastname=lastname, email=email, password=hash_password
+            firstname=firstname, lastname=lastname, email=email, password=hash_password,degree="",birthday="", description="", profile_image="", skills="",
+        
         )
         session.add(new_user)
         session.commit()
@@ -84,11 +91,6 @@ def register():
 
 @main.route("/commence_scraping", methods=["GET", "POST"])
 def scrape():
-    import os
-    import yaml
-    from multiprocessing import Process
-    from .scraper.scrape_control import run
-
     with open(
         os.path.join(os.path.dirname(__file__), "scraper", "config.yaml"), "r"
     ) as file:

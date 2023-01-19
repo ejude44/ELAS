@@ -1,0 +1,25 @@
+input {
+  background-color: transparent;
+  border: 0;
+  padding: 8px;
+  border-color: #303f9f;
+}
+
+#textfield {
+  background-color: transparent;
+  border: 0;
+  padding: 8px;
+}
+
+textarea {
+  background-color: transparent;
+  border: 0;
+  border-color: #303f9f;
+  padding: 8px;
+  width: '100%';
+}
+
+input:hover {
+  background-color: #d3d3d3;
+  cursor: pointer;
+}
