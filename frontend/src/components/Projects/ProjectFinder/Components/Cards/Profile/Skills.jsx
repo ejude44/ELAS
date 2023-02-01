@@ -16,7 +16,8 @@ import { skills } from '../../../reuse/reuse';
 import Chip from '@material-ui/core/Chip';
 import { CircularProgress } from '@material-ui/core';
 import { useEffect } from 'react';
-import customClasses from './../../../Css/Input.module.css';
+
+import { List } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'flex-end',
     alignItems: 'right',
     verticalAlign: 'text-bottom',
-    marginTop: 50,
+    marginTop: 120,
   },
   profileSkills: {
     fontWeight: 700,
@@ -79,7 +80,7 @@ export default function Skills({ props }) {
     } else {
       setValue({ ...value, 'skills': event.target.value });
     }
-    // setHideButton(true)
+    setHideButton(true);
   };
 
   useEffect(() => {
@@ -87,76 +88,84 @@ export default function Skills({ props }) {
       setMySkills(value.skills);
     }
   }, [value]);
-  console.log(mySkills);
+
   return (
     <>
       <Grid container direction="column">
-        <Paper className={classes.root}>
-          <div style={{ padding: 5 }}>
-            <Typography className={classes.profileSkills}>
-              Skills
-              <Tooltip title="click  on the Text to begin editing">
-                <EditOutlinedIcon
-                  fontSize="small"
-                  style={{ color: '#FF6500' }}
-                />
-              </Tooltip>
-            </Typography>
-            <Grid item>
-              <Autocomplete
-                multiple
-                onChange={onChange}
-                id="tags-standard"
-                options={skills}
-                size="small"
-                freeSolo
-                getOptionLabel={(option) => option}
-                // defaultValue={[skills[1]]}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    variant="standard"
-                    label="search for  Skills"
-                    placeholder="Add Skills"
-                    className={classes.skillsBox}
+        <Paper
+          className={classes.root}
+          style={{ maxHeight: 300, overflow: 'auto' }}
+        >
+          <List>
+            <div style={{ padding: 5 }}>
+              <Typography className={classes.profileSkills}>
+                Skills
+                <Tooltip title="click  on the Text to begin editing">
+                  <EditOutlinedIcon
+                    fontSize="small"
+                    style={{ color: '#FF6500' }}
                   />
-                )}
-              />
-            </Grid>
+                </Tooltip>
+              </Typography>
+              <Grid item>
+                <Autocomplete
+                  multiple
+                  onChange={onChange}
+                  onBlur={onBlur}
+                  id="tags-standard"
+                  options={skills}
+                  size="small"
+                  freeSolo
+                  getOptionLabel={(option) => option}
+                  // defaultValue={skills ? skills : value.skills}
+                  // defaultValue={skills ? skills : value.skills}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant="standard"
+                      label="search for  Skills"
+                      placeholder="Add Skills"
+                      className={classes.skillsBox}
+                    />
+                  )}
+                />
+              </Grid>
 
-            {mySkills ? (
-              <>
-                <Grid container spacing={1}>
-                  {mySkills.map((skill, index) => (
-                    <Grid item key={index}>
-                      <Chip label={skill} size="small" />
-                    </Grid>
-                  ))}
-                </Grid>
-              </>
-            ) : (
-              <CircularProgress />
-            )}
-
-            <Box className={classes.saveSkills}>
-              {!hideButton ? (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleSave}
-                  style={{
-                    marginLeft: 10,
-                    backgroundColor: '#FF6500',
-                    color: 'white',
-                  }}
-                >
-                  <SaveOutlinedIcon fontSize="small" /> {status}
-                </Button>
+              {mySkills ? (
+                <>
+                  <Grid container spacing={1}>
+                    {mySkills.map((skill, index) => (
+                      <Grid item key={index}>
+                        <Chip label={skill} size="small" />
+                      </Grid>
+                    ))}
+                  </Grid>
+                </>
               ) : (
-                ''
+                <CircularProgress />
               )}
-            </Box>
-          </div>
+
+              <Box className={classes.saveSkills}>
+                {!hideButton ? (
+                  <Button
+                    size="small"
+                    variant="contained"
+                    onClick={handleSave}
+                    style={{
+                      marginLeft: 10,
+                      backgroundColor: '#FF6500',
+                      color: 'white',
+                    }}
+                  >
+                    <SaveOutlinedIcon fontSize="small" />
+                    {status}
+                  </Button>
+                ) : (
+                  ''
+                )}
+              </Box>
+            </div>
+          </List>
         </Paper>
       </Grid>
     </>

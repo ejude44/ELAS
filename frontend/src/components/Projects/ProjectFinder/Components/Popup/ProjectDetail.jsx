@@ -13,12 +13,10 @@ import { useState } from 'react';
 import { Tooltip } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import { useApply } from '../../api/project/hooks';
-
 import { useMyMembershipStatus } from '../../api/project/hooks';
 import WatchLaterIcon from '@material-ui/icons/WatchLater';
 import { Chip } from '@material-ui/core';
 import { CircularProgress } from '@material-ui/core';
-
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined';
 import Discussion from '../Cards/EditProject/Discussion';
 import { List } from '@material-ui/core';
@@ -45,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
     border: '1px solid grey',
     borderRadius: 5,
 
-    margin: 5,
+    margin: 3,
   },
   span: {
     display: 'flex',
@@ -56,33 +54,33 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    font: 'Roboto',
-    fontFamily: 'Roboto',
+    // font: 'Roboto',
+    // fontFamily: 'Roboto',
     fontWeight: 400,
     fontSize: 21,
-    color: '#000000',
+    // color: '#000000',
   },
   heading: {
-    font: 'Roboto',
-    fontFamily: 'Roboto',
+    // font: 'Roboto',
+    // fontFamily: 'Roboto',
     fontWeight: 700,
     fontSize: 18,
-    color: '#000000',
+    // color: '#000000',
   },
   det: {
-    font: 'Roboto',
-    fontFamily: 'Roboto',
+    // font: 'Roboto',
+    // fontFamily: 'Roboto',
     fontWeight: 400,
-    fontSize: 13,
-    color: '#000000',
-    lineHeight: 2,
+    fontSize: 15,
+    // color: '#000000',
+    // lineHeight: 2,
   },
   detOptions: {
-    font: 'Roboto',
-    fontFamily: 'Roboto',
+    // font: 'Roboto',
+    // fontFamily: 'Roboto',
     fontWeight: 400,
     fontSize: 20,
-    color: '#000000',
+    // color: '#000000',
   },
   center: {
     display: 'flex',
@@ -99,7 +97,7 @@ const useStyles = makeStyles((theme) => ({
 export default function ProjectDetail(props) {
   const { open, handleClose, project, id } = props;
   const userCtx = useContext(UserContext);
-  const { status, } = useMyMembershipStatus(id, userCtx.id);
+  const { status } = useMyMembershipStatus(id, userCtx.id);
   const [clicked, setClicked] = useState(false);
 
   const { apply } = useApply(id, userCtx.id);
@@ -118,13 +116,13 @@ export default function ProjectDetail(props) {
           style={{ maxHeight: 570, overflow: 'auto' }}
         >
           <List>
-            <span className={classes.span} onClick={handleClose}>
+            <Grid item className={classes.span} onClick={handleClose}>
               <button type="button">
                 <Tooltip title="close Dialog">
                   <CloseIcon />
                 </Tooltip>
               </button>
-            </span>
+            </Grid>
             <div style={{ padding: 1 }}>
               <Grid container direction="row" spacing={2}>
                 <Grid item xs={5} className={classes.grid}>
@@ -136,7 +134,7 @@ export default function ProjectDetail(props) {
                     />
                   </Grid>
                   <Divider></Divider>
-                  <Typography className={classes.title}>
+                  <Typography className={classes.title} gutterBottom>
                     {project.title}
                   </Typography>
                   <Grid item className={classes.center}>
@@ -220,33 +218,38 @@ export default function ProjectDetail(props) {
                 </Grid>
 
                 <Grid item xs={6} className={classes.grid}>
-                  <Typography className={classes.heading}>Details</Typography>
-                  <Typography className={classes.det}>faculty</Typography>
-                  <Typography className={classes.detOptions}>
+                  <Typography className={classes.heading} gutterBottom>
+                    Details
+                  </Typography>
+                  <Typography className={classes.det} gutterBottom>
+                    faculty
+                  </Typography>
+                  <Typography className={classes.detOptions} gutterBottom>
                     {project.faculty}
                   </Typography>
-                  <Typography className={classes.det}>
+                  <Typography className={classes.det} gutterBottom>
                     Maximum Team size
                   </Typography>
-                  <Typography className={classes.detOptions}>
+                  <Typography className={classes.detOptions} gutterBottom>
                     {project.maxMembers}
                   </Typography>
-                  <Typography className={classes.det}>Degree</Typography>
-                  <Typography className={classes.detOptions}>
+                  <Typography className={classes.det} gutterBottom>
+                    Degree
+                  </Typography>
+                  <Typography className={classes.detOptions} gutterBottom>
                     {project.degree}
                   </Typography>
                 </Grid>
 
                 <Grid item xs={5} className={classes.grid}>
-                  <Typography className={classes.heading}>
+                  <Typography className={classes.heading} gutterBottom>
                     Description
                   </Typography>
                   <section>{project.description}</section>
                   <Divider></Divider>
-                  <Typography className={classes.heading}>
+                  <Typography className={classes.heading} gutterBottom>
                     Skills Required
                   </Typography>
-                  {/* <Typography variant="body1">{project.skills}</Typography> */}
 
                   {project.skills ? (
                     <>
@@ -263,7 +266,7 @@ export default function ProjectDetail(props) {
                   )}
                 </Grid>
                 <Grid item xs={6} className={classes.grid}>
-                  <Typography className={classes.heading}>
+                  <Typography className={classes.heading} gutterBottom>
                     Discussion
                   </Typography>
                   <Discussion id={id} />

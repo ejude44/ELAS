@@ -57,10 +57,10 @@ export default function EditDetails(props) {
       <div>
         <Backdrop className={classes.backdrop} open={open.details}>
           <Paper className={classes.root}>
-            <div style={{ padding: 20 }}>
-              <Typography variant="h5">Edit Project Details</Typography>
+            <div style={{ padding: 10 }}>
+              <Typography variant="h5" gutterBottom>Edit Project Details</Typography>
 
-              <Grid item>
+              <Grid item >
                 <TextField
                   id="outlined-select-faculty"
                   select

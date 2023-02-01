@@ -15,10 +15,6 @@ export default function DescriptionAndSkills({ props }) {
 
   return (
     <Grid container direction="column" sx={{ mb: 2 }}>
-      {/* <form
-        noValidate
-        //   onSubmit={submitFormHandler}
-      > */}
       <Grid item>
         <TextField
           id="outlined-multiline-static"
@@ -27,7 +23,7 @@ export default function DescriptionAndSkills({ props }) {
           multiline
           value={value.description}
           rows={10}
-          // variant="outlined"
+          variant="outlined"
           onChange={onChangeDesc}
           // onChange={descriptionChangeHandler}
           //   error={userInput.enteredDescriptionError.error}
@@ -40,9 +36,6 @@ export default function DescriptionAndSkills({ props }) {
         <Autocomplete
           multiple
           onChange={onChangeSkills}
-          // onChange={(event, skills) => onChange(event, skills)}
-          // onChange={(event, mySkills) => setMySkills(mySkills)}
-
           id="tags-standard"
           options={skills}
           freeSolo
@@ -58,21 +51,6 @@ export default function DescriptionAndSkills({ props }) {
           )}
         />
       </Grid>
-
-      {/* <Grid item>
-        <TextField
-          id="standard-full-width"
-          label="Enter Skills comma separated"
-          variant="outlined"
-          multiline
-          fullWidth
-          value={value.skills}
-          onChange={onChangeSkills}
-          //   error={userInput.enteredSkillsError.error}
-          //   helperText={userInput.enteredSkillsError.message}
-        />
-      </Grid> */}
-      {/* </form> */}
     </Grid>
   );
 }

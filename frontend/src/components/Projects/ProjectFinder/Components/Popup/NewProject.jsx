@@ -65,6 +65,7 @@ export default function NewProject(props) {
 
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
+  const [errorCreateProject, setErrorCreateProject] = useState('');
   const [value, setValue] = useState({
     'title': '',
     'faculty': '',
@@ -72,7 +73,89 @@ export default function NewProject(props) {
     'maxMembers': '',
     'description': '',
     'skills': '',
+    'titleError': {
+      error: false,
+      message: '',
+    },
+    'descriptionError': {
+      error: false,
+      message: '',
+    },
+    'facultyError': {
+      error: false,
+      message: '',
+    },
+    'degreeError': {
+      error: false,
+      message: '',
+    },
+    'skillsError': {
+      error: false,
+      message: '',
+    },
+    'maxMembersError': {
+      error: false,
+      message: '',
+    },
   });
+
+  const validate = () => {
+    if (!value.title) {
+      setValue({
+        ...value,
+        titleError: {
+          error: true,
+          message: 'title cannot be empty',
+        },
+      });
+      return false;
+    } else if (!value.faculty) {
+      setValue({
+        ...value,
+        facultyError: {
+          error: true,
+          message: 'faculty cannot be empty',
+        },
+      });
+      return false;
+    } else if (!value.degree) {
+      setValue({
+        ...value,
+        degreeError: {
+          error: true,
+          message: 'degree cannot be empty',
+        },
+      });
+      return false;
+    } else if (!value.maxMembers) {
+      setValue({
+        ...value,
+        maxMembersError: {
+          error: true,
+          message: 'plese select project maximum members',
+        },
+      });
+      return false;
+    } else if (value.description) {
+      setValue({
+        ...value,
+        descriptionError: {
+          error: true,
+          message: 'Please enter description',
+        },
+      });
+      return true;
+    } else if (value.skills) {
+      setValue({
+        ...value,
+        skillsError: {
+          error: true,
+          message: 'enter skills',
+        },
+      });
+      return true;
+    } else return true;
+  };
 
   function getSteps() {
     return ['Title & Details', 'Description and Skills', 'Create Project'];
@@ -85,7 +168,7 @@ export default function NewProject(props) {
       case 1:
         return <DescriptionAndSkills props={{ value, setValue }} />;
       case 2:
-        return 'You are all set!, Click finish';
+        return 'You are all set!, Click finish to create your Project';
       default:
         return 'Unknown step';
     }
@@ -102,14 +185,17 @@ export default function NewProject(props) {
   };
 
   const handleNext = () => {
-    let newSkipped = skipped;
-    if (isStepSkipped(activeStep)) {
-      newSkipped = new Set(newSkipped.values());
-      newSkipped.delete(activeStep);
-    }
+    if (validate()) {
+      let newSkipped = skipped;
+      if (isStepSkipped(activeStep)) {
+        newSkipped = new Set(newSkipped.values());
+        newSkipped.delete(activeStep);
+      }
 
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped(newSkipped);
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+
+      setSkipped(newSkipped);
+    }
   };
 
   const handleBack = () => {
@@ -152,9 +238,11 @@ export default function NewProject(props) {
               </Tooltip>
             </button>
           </span>
-          <div style={{ padding: 1 }}>
-            <Typography variant="h5">Create a New Project</Typography>
-          </div>
+          <Grid>
+            <Typography variant="h5" gutterBottom>
+              Create a New Project
+            </Typography>
+          </Grid>
 
           <Grid item>
             <div className={classes.root}>
@@ -211,6 +299,7 @@ export default function NewProject(props) {
                       )}
 
                       <Button
+                        style={{}}
                         variant="contained"
                         onClick={handleNext}
                         className={classes.button}

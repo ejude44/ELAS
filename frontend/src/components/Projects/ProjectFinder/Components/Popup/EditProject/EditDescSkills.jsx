@@ -5,9 +5,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useState } from 'react';
 import SaveOutlinedIcon from '@material-ui/icons/SaveOutlined';
 import { TextField } from '@material-ui/core';
-import { Faculties, Degrees, maxMembers } from '../../../reuse/reuse';
-import { MenuItem } from '@material-ui/core';
-
+import { Autocomplete } from '@material-ui/lab';
+import { skills } from '../../../reuse/reuse';
 const useStyles = makeStyles((theme) => ({
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
@@ -34,11 +33,11 @@ export default function EditDescSkills(props) {
     });
   };
 
-  const handleOnChangeSkills = (event) => {
+  const handleOnChangeSkills = (event, skills) => {
     setValue({
       ...value,
 
-      'skills': event.target.value,
+      'skills': skills,
     });
   };
 
@@ -49,8 +48,10 @@ export default function EditDescSkills(props) {
       <div>
         <Backdrop className={classes.backdrop} open={open.descSkills}>
           <Paper className={classes.root}>
-            <div style={{ padding: 20 }}>
-              <Typography variant="h5">Edit Description and Skills</Typography>
+            <div style={{ padding: 10 }}>
+              <Typography variant="h5" gutterBottom>
+                Edit Description and Skills
+              </Typography>
 
               <Grid item>
                 <TextField
@@ -70,15 +71,25 @@ export default function EditDescSkills(props) {
               <br></br>
 
               <Grid item>
-                <TextField
-                  id="standard-full-width"
-                  label="Enter Skills comma separated"
-                  variant="outlined"
-                  fullWidth
-                  value={value.skills}
+                <Autocomplete
+                  multiple
                   onChange={handleOnChangeSkills}
-                  //   error={userInput.enteredSkillsError.error}
-                  //   helperText={userInput.enteredSkillsError.message}
+                  // onBlur={onBlur}
+                  id="tags-standard"
+                  options={skills}
+                  size="small"
+                  freeSolo
+                  getOptionLabel={(option) => option}
+                  defaultValue={skills}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant="standard"
+                      label="edit  Skills"
+                      placeholder="Add Skills"
+                      className={classes.skillsBox}
+                    />
+                  )}
                 />
               </Grid>
             </div>
@@ -95,7 +106,7 @@ export default function EditDescSkills(props) {
                   color: 'white',
                 }}
               >
-                <SaveOutlinedIcon fontSize='small' /> Save
+                <SaveOutlinedIcon fontSize="small" /> Save
               </Button>
             </Box>
           </Paper>

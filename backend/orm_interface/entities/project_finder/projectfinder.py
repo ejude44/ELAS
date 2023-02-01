@@ -32,7 +32,7 @@ class ProjectFinder_User(Base):
 
 class Projects(Base):
     __tablename__ = "projects"
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    id = Column(Integer, primary_key=True, autoincrement=True, unique=True)
     title = Column(String)
     faculty= Column(String)
     description= Column(String)
@@ -61,9 +61,9 @@ class Projects(Base):
 
 class Membership(Base):
     __tablename__ = "membership"
-    id = Column(Integer,primary_key=True, autoincrement=True)
-    user_id  = Column(Integer, ForeignKey('user.id'))
-    project_id = Column(Integer, ForeignKey('projects.id', ondelete='CASCADE'))
+    id = Column(Integer,primary_key=True,autoincrement=True, unique= True)
+    user_id  = Column(Integer, ForeignKey('user.id'), primary_key=True)
+    project_id = Column(Integer, ForeignKey('projects.id', ondelete='CASCADE'),primary_key=True)
     status = Column(String)
 
     def __init__(self,project_id, user_id, status):
@@ -74,9 +74,9 @@ class Membership(Base):
 
 class Discussion(Base):
     __tablename__ = "discussion"
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    project_id = Column(Integer, ForeignKey('projects.id', ondelete='CASCADE'))
-    user_id = Column(Integer, ForeignKey('user.id'))
+    id = Column(Integer, primary_key=True, autoincrement=True, unique=True)
+    project_id = Column(Integer, ForeignKey('projects.id', ondelete='CASCADE'),primary_key = True)
+    user_id = Column(Integer, ForeignKey('user.id'), primary_key=True)
     created_at = Column(DateTime)
     description = Column(String)
     children = Column(String)

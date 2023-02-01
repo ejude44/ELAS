@@ -89,6 +89,10 @@ export const maxMembers = [
     value: '5',
     label: '5',
   },
+  {
+    value: '6',
+    label: '6',
+  },
 ];
 
 export const projectStatus = [

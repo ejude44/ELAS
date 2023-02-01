@@ -152,6 +152,7 @@ export default function ProfileCard({ props }) {
               {' '}
               {!hideButton ? (
                 <Button
+                  size='small'
                   color="primary"
                   variant="contained"
                   onClick={handleSave}

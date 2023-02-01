@@ -19,14 +19,7 @@ import ProjectDetail from '../../Components/Popup/ProjectDetail';
 import UserContext from '../../Store/UserContext';
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    // height: 'inherit',
-    // border: '1px solid black',
-    // padding: 8,
-    display: 'flex',
-    // justifyContent: 'flex-end',
-    // alignItems: 'right',
-  },
+ 
   my: {
     display: 'flex',
     justifyContent: 'flex-start',
@@ -34,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
   },
   myProjects: {
     fontWeight: 700,
+    lineHeight:3
   },
   dashboard: {
     fontWeight: 400,
@@ -117,12 +111,6 @@ export default function Dashboard() {
     } else if (otherProjects !== undefined && projects) {
       setLoadedProjects([...otherProjects, ...projects]);
     }
-
-    // if (userCtx.toComplete === false) {
-    //   setOpen(false);
-    // } else if (userCtx.toComplete === true) {
-    //   setOpen(true);
-    // }
   }, [state]);
 
   const handleClose = () => {
@@ -155,59 +143,54 @@ export default function Dashboard() {
 
   return (
     <Grid container direction="column">
-      <Grid item>
-        <Typography className={classes.dashboard}>Dashboard</Typography>
-        <Typography>Welcome:{userCtx.firstName} </Typography>
+      <Grid container>
+        <Grid item xs={8}>
+          <Typography className={classes.dashboard}>Dashboard</Typography>
+          <Typography>Welcome:{userCtx.firstName} </Typography>
+          <Typography className={classes.myProjects}>My Projects</Typography>
+        </Grid>
+        <Grid item xs={2}>
+          <FormControl component="fieldset" className={classes.formControl}>
+            <FormLabel component="legend">Filter Projects</FormLabel>
+            <FormGroup>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={state.My}
+                    size="small"
+                    onChange={handleChange}
+                    name="My"
+                    style={{ color: '#FF6500' }}
+                  />
+                }
+                label="My projects"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    size="small"
+                    checked={state.Other}
+                    onChange={handleChange}
+                    name="Other"
+                    style={{ color: '#FF6500' }}
+                  />
+                }
+                label="Other projects"
+              />
+            </FormGroup>
+          </FormControl>
+        </Grid>
+        <Grid item xs={2}>
+          <Button
+            onClick={handleNewProject}
+            variant="contained"
+            style={{ color: 'white', backgroundColor: '#FF6500' }}
+            size="small"
+          >
+            Create Project
+          </Button>
+        </Grid>
       </Grid>
-      <Box className={classes.my}>
-        <Typography className={classes.myProjects}>My Projects</Typography>
-      </Box>
-
-      <Box className={classes.box}>
-        <Box className={classes.root}>
-          <Grid item>
-            <FormControl component="fieldset" className={classes.formControl}>
-              <FormLabel component="legend">Filter Projects</FormLabel>
-              <FormGroup>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={state.My}
-                      size="small"
-                      onChange={handleChange}
-                      name="My"
-                      style={{ color: '#FF6500' }}
-                    />
-                  }
-                  label="My projects"
-                />
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      size="small"
-                      checked={state.Other}
-                      onChange={handleChange}
-                      name="Other"
-                      style={{ color: '#FF6500' }}
-                    />
-                  }
-                  label="Other projects"
-                />
-              </FormGroup>
-            </FormControl>
-          </Grid>
-
-          <Grid item>
-            <Button
-              onClick={handleNewProject}
-              variant="contained"
-              style={{ color: 'white', backgroundColor: '#FF6500' }}
-            >
-              Create Project
-            </Button>
-          </Grid>
-        </Box>
-      </Box>
 
       <Grid item>
         {loadedProjects ? (

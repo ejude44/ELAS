@@ -26,13 +26,11 @@ const useStyles = makeStyles((theme) => ({
       margin: theme.spacing(1),
       width: theme.spacing(100),
 
-      // height: theme.spacing(20),
+     
     },
   },
   grid: {
-    //   border: '1px solid grey',
     borderRadius: 5,
-
     margin: 0,
   },
   span: {
@@ -73,14 +71,16 @@ export default function ProjectApplications() {
   };
 
   const handleRemove = async () => {
-    console.log(memId);
+   
     await remove(memId);
     await refetch();
   };
 
   useEffect(() => {
     if (MEM !== undefined) {
-      const mems = MEM.filter((mem) => mem.project_id == id);
+      const mems = MEM.filter(
+        (mem) => mem.status === 'pending' && mem.project_id == id
+      );
       const rejectedMems = MEM.filter(
         (mem) => mem.status == 'rejected' && mem.project_id == id
       );
@@ -100,9 +100,9 @@ export default function ProjectApplications() {
 
   return (
     <Grid container direction="column">
-      <div style={{ padding: 20 }}>
+      <Grid item style={{ padding: 10 }}>
         <Grid container direction="row" spacing={2}>
-          <Grid item xs={4} className={classes.grid}>
+          <Grid item xs={12} sm={8} lg={4} className={classes.grid}>
             <TeamMembers
               teamMember={teamMember}
               setOpen={setOpen}
@@ -113,7 +113,7 @@ export default function ProjectApplications() {
             />
           </Grid>
 
-          <Grid item xs={4} className={classes.grid}>
+          <Grid item xs={12} sm={8} lg={4} className={classes.grid}>
             <Applications
               memberships={loadedMembers}
               SETID={SETID}
@@ -131,7 +131,7 @@ export default function ProjectApplications() {
             />
           </Grid>
 
-          <Grid item xs={4} className={classes.grid}>
+          <Grid item xs={12} sm={8} lg={4} className={classes.grid}>
             <Rejected
               rejected={rejected}
               SETID={SETID}
@@ -143,7 +143,7 @@ export default function ProjectApplications() {
             />
           </Grid>
         </Grid>
-      </div>
+      </Grid>
     </Grid>
   );
 }

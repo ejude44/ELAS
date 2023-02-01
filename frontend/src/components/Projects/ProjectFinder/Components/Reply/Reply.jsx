@@ -5,6 +5,7 @@ import { deepOrange } from '@material-ui/core/colors';
 import en from 'javascript-time-ago/locale/en.json';
 import ReactTimeAgo from 'react-time-ago';
 import TimeAgo from 'javascript-time-ago';
+import MoreVertOutlinedIcon from '@material-ui/icons/MoreVertOutlined';
 
 TimeAgo.addLocale(en);
 
@@ -29,7 +30,9 @@ const useStyles = makeStyles((theme) => ({
     border: '1px solid grey',
     borderRadius: 5,
     padding: 5,
-    margin: 5,
+    margin: 0,
+    width: 'inherit',
+    backgroundColor: '#edebeb',
   },
 }));
 
@@ -38,28 +41,46 @@ export default function Reply({ reply }) {
 
   return (
     <>
-      <Container>
-        <Grid container>
-          <Grid item key={Math.random() * 10} className={classes.grid}>
-            <Grid item style={{ display: 'flex' }}>
-              {/* {setParentId(comment.id)} */}
+      <Grid container>
+        <Grid item key={Math.random() * 10} className={classes.grid}>
+          <Grid container>
+            <Grid item xs={2}>
               <Avatar className={classes.orange} style={{ marginRight: 10 }}>
                 {reply
                   ? Array.from(reply.firstname)[0].toUpperCase() +
                     Array.from(reply.lastname)[0].toUpperCase()
                   : ''}
               </Avatar>
-              {reply.firstname + ' ' + reply.lastname}
-              <span style={{ display: 'block' }}>
-                <ReactTimeAgo date={reply.created_at} locale="en-US" />
-              </span>
             </Grid>
-
-            {reply.description}
-            <Divider></Divider>
+            <Grid item xs={8}>
+              <Grid item>
+                <Typography variant="body1">
+                  {reply.firstname + ' ' + reply.lastname}
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography
+                  variant="body2"
+                  gutterBottom
+                  style={{ fontSize: 12 }}
+                >
+                  <ReactTimeAgo
+                    date={Date.parse(reply.created_at)}
+                    locale="en-US"
+                  />
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid item xs>
+              <MoreVertOutlinedIcon
+                style={{ color: '#FF6500' }}
+              ></MoreVertOutlinedIcon>
+            </Grid>
           </Grid>
+
+          <Typography>{reply.description}</Typography>
         </Grid>
-      </Container>
+      </Grid>
     </>
   );
 }

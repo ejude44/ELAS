@@ -42,7 +42,7 @@ export default function Title(props) {
             />
 
             <Grid item>
-              <Typography className={classes.title}>
+              <Typography className={classes.title} gutterBottom>
                 {value.title}
                 <span>
                   <Tooltip title="Click to Edit Title">

@@ -1,17 +1,11 @@
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import * as React from 'react';
-import { Grid, Box, makeStyles, Divider } from '@material-ui/core';
+import { Grid, Box, makeStyles, Divider, Typography } from '@material-ui/core';
 import { Avatar } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import {
-  deepOrange,
-  deepPurple,
-  yellow,
-  blueGrey,
-  green,
-} from '@material-ui/core/colors';
+import { deepOrange } from '@material-ui/core/colors';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import DoneOutlinedIcon from '@material-ui/icons/DoneOutlined';
 import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
@@ -19,54 +13,16 @@ import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
 const ITEM_HEIGHT = 48;
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: 'blockk',
+    display: 'block',
     flexWrap: 'wrap',
     '& > *': {
       margin: theme.spacing(1),
-      //   width: theme.spacing(30),
-      //   height: theme.spacing(35),
     },
   },
-  rootAvatar: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    alignItems: 'right',
-    '& > *': {
-      margin: theme.spacing(0),
-    },
-  },
-  name: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    whiteSpace: 'nowrap',
-    textOverflow: 'clip',
-    marginLeft: 20,
-  },
+
   orange: {
     color: theme.palette.getContrastText(deepOrange[500]),
     backgroundColor: deepOrange[500],
-  },
-  purple: {
-    color: theme.palette.getContrastText(deepPurple[500]),
-    backgroundColor: deepPurple[500],
-  },
-  blue: {
-    color: theme.palette.getContrastText(blueGrey[800]),
-    backgroundColor: blueGrey[800],
-  },
-  green: {
-    color: theme.palette.getContrastText(green[500]),
-    backgroundColor: green[500],
-  },
-  yellow: {
-    color: theme.palette.getContrastText(yellow[700]),
-    backgroundColor: yellow[700],
-  },
-  span: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    alignItems: 'right',
   },
 }));
 
@@ -78,7 +34,7 @@ export default function RejectedMembers({
   handleRemove,
 }) {
   const classes = useStyles();
-  const colors = [classes.orange, classes.purple, classes.blue, classes.green, classes.yellow];
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
 
@@ -90,25 +46,22 @@ export default function RejectedMembers({
     setAnchorEl(null);
   };
   return (
-    <Grid
-      item
-      xs={4}
-      className={classes.grid}
-      onClick={() => handleProfile(rejected.id)}
-    >
-      <div style={{ display: 'flex' }}>
-        <Avatar className={colors[Math.floor(Math.random() * 5)]}>
-          {rejected
-            ? Array.from(rejected.firstname)[0].toUpperCase() +
-              Array.from(rejected.lastname)[0].toUpperCase()
-            : ''}
-        </Avatar>
-
-        <Box className={classes.name}>
-          {rejected.firstname + ' ' + rejected.lastname}
-        </Box>
-
-        <Grid className={classes.rootAvatar}>
+    <Grid item className={classes.grid}>
+      <Grid container>
+        <Grid item xs={2}>
+          <Avatar className={classes.orange}>
+            {rejected
+              ? Array.from(rejected.firstname)[0].toUpperCase() +
+                Array.from(rejected.lastname)[0].toUpperCase()
+              : ''}
+          </Avatar>
+        </Grid>
+        <Grid item xs={8}>
+          <Typography>
+            {rejected.firstname + ' ' + rejected.lastname}
+          </Typography>
+        </Grid>
+        <Grid item xs={2} onClick={() => handleProfile(rejected.id)}>
           <IconButton
             aria-label="more"
             aria-controls="long-menu"
@@ -157,7 +110,7 @@ export default function RejectedMembers({
             </MenuItem>
           </Menu>
         </Grid>
-      </div>
+      </Grid>
     </Grid>
   );
 }

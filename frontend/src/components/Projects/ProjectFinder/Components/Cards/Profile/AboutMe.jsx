@@ -3,8 +3,7 @@ import {
   Typography,
   makeStyles,
   Box,
-  TextField,
-  TextareaAutosize,
+
 } from '@material-ui/core';
 import { Paper } from '@material-ui/core';
 import { useState } from 'react';
@@ -104,6 +103,7 @@ export default function AboutMe({ props }) {
             <Box className={classes.saveAbout}>
               {!hideButton ? (
                 <Button
+                  size='small'
                   onClick={handleSave}
                   variant="contained"
                   color="primary"

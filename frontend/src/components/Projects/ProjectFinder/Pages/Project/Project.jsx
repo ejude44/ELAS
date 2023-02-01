@@ -30,6 +30,12 @@ import ConfirmDelete from '../../Components/Popup/EditProject/ConfirmDelete';
 import { useHistory } from 'react-router-dom';
 import { useDeleteProject } from '../../api/project/hooks';
 import { useLocation } from 'react-router-dom';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const useStyles = makeStyles({
   root: {
@@ -75,7 +81,9 @@ export default function SearchProjects() {
   const classes = useStyles();
   const [values, setValues] = useState(0);
   const { id } = useParams();
-  const { members } = useProjectMembers(id);
+  // const { members } = useProjectMembers(id);
+  const [appMem, setAppMem] = useState();
+  const { MEM, refetch } = useMyMembershipStatus(id, null);
 
   const history = useHistory();
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -96,12 +104,22 @@ export default function SearchProjects() {
     'description': '',
     'skills': '',
   });
-  // const [saveIsClicked, setSaveIsClicked] = useState(false);
+
   const [open, setOpen] = useState({
     'title': false,
     'details': false,
     'descSkills': false,
   });
+
+  const [opens, setOpens] = useState(false);
+
+  const handleCloses = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpens(false);
+  };
 
   const { editProject } = useEditProject();
 
@@ -120,10 +138,11 @@ export default function SearchProjects() {
   const handleOnEditDescSkillsClick = () => {
     setOpen({ 'descSkills': true });
   };
-  const handleSave = () => {
-    editProject(id, value, authCtx.token);
+  const handleSave = async () => {
+    await editProject(id, value, authCtx.token);
     setOpen(false);
-    getProj();
+    setOpens(true);
+    await getProj();
   };
 
   const handleChange = (event, newValues) => {
@@ -159,7 +178,14 @@ export default function SearchProjects() {
       });
       setLoadedProject(project);
     }
-  }, [loadedProject, project, open]);
+    if (MEM !== undefined) {
+      const appmem = MEM.filter(
+        (mem) => mem.status === 'pending' && mem.project_id == id
+      );
+
+      setAppMem(appmem);
+    }
+  }, [loadedProject, project, open, MEM]);
   return (
     <>
       {confirmDelete && (
@@ -170,19 +196,19 @@ export default function SearchProjects() {
         />
       )}
       <Grid container direction="column">
-        <Grid item>
-          <ul className={classes.nav}>
-            <Link to="/project-finder" className={classes.li}>
-              Dashboard
-            </Link>
-            <li className={classes.li}>{`>`}</li>
-            <li className={classes.li}>
-              <p>{value.title}</p>
-            </li>
-          </ul>
-        </Grid>
+        <Grid container>
+          <Grid item xs>
+            <ul className={classes.nav}>
+              <Link to="/project-finder" className={classes.li}>
+                Dashboard
+              </Link>
+              <li className={classes.li}>{`>`}</li>
+              <li className={classes.li}>
+                <p>{value.title}</p>
+              </li>
+            </ul>
+          </Grid>
 
-        <Box className={classes.deleteProject}>
           <Grid item>
             <Button
               size="small"
@@ -193,9 +219,8 @@ export default function SearchProjects() {
               Delete Project
             </Button>
           </Grid>
-        </Box>
+        </Grid>
 
-        {/* <Grid item> */}
         <Paper className={classes.root}>
           <Tabs
             value={values}
@@ -225,9 +250,7 @@ export default function SearchProjects() {
               }`}
             >
               <Tab label="applications" />
-              <span className={classes.sup}>
-                {members ? members.length : ''}
-              </span>
+              <span className={classes.sup}>{appMem ? appMem.length : ''}</span>
             </Link>
           </Tabs>
         </Paper>
@@ -249,7 +272,11 @@ export default function SearchProjects() {
             <ProjectApplications />
           </Route>
         </Switch>
-        {/* </Grid> */}
+        <Snackbar open={opens} autoHideDuration={3000} onClose={handleCloses}>
+          <Alert onClose={handleCloses} severity="success">
+            Changes saved!
+          </Alert>
+        </Snackbar>
       </Grid>
     </>
   );

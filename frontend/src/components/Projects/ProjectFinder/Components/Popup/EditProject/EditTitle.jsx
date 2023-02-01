@@ -38,14 +38,15 @@ export default function EditTitle(props) {
       <div>
         <Backdrop className={classes.backdrop} open={open.title}>
           <Paper className={classes.root}>
-            <div style={{ padding: 20 }}>
-              <Typography variant="h5">Edit Project Title</Typography>
+            <div style={{ padding: 10 }}>
+              <Typography variant="h5" gutterBottom>
+                Edit Project Title
+              </Typography>
               <Grid item>
                 <TextField
                   id="standard-full-width"
                   label="Title"
                   fullWidth
-          
                   variant="outlined"
                   value={value.title}
                   //   error={userInput.enteredTitleError.error}
@@ -68,7 +69,7 @@ export default function EditTitle(props) {
                   color: 'white',
                 }}
               >
-                <SaveOutlinedIcon fontSize='small' /> Save
+                <SaveOutlinedIcon fontSize="small" /> Save
               </Button>
             </Box>
           </Paper>

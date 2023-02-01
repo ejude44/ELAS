@@ -5,17 +5,13 @@ import Drawer from '@material-ui/core/Drawer';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
+
 import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
+
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
-import { propTypes } from 'react-bootstrap/esm/Image';
-import { NavLink, BrowserRouter, Link, useParams } from 'react-router-dom';
+import { NavLink, Link, useParams } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
-import logo from './../../reuse/files/logo.png';
+import logo from './../../reuse/files/Proj.png';
 
 const drawerWidth = 170;
 
@@ -75,12 +71,30 @@ export default function NavBar(props) {
         <Toolbar>
           <center>
             <Link to="/project-finder">
-              <img src={logo} alt="logo" height="70" width="140" />
+              <img
+                src={logo}
+                alt="logo"
+                height="50"
+                width="130"
+                style={{ marginTop: 15, marginLeft: -8 }}
+              />
             </Link>
           </center>
         </Toolbar>
         <div className={classes.drawerContainer}>
           <List>
+            {/* <center>
+              <Link to="/project-finder">
+                <img
+                  src={logo}
+                  alt="logo"
+                  height="50"
+                  width="130"
+                  style={{ marginBottom: 10 }}
+                />
+              </Link>
+            </center> */}
+
             <NavLink to="/project-finder" className={classes.link}>
               <ListItem
                 button

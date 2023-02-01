@@ -1,7 +1,7 @@
 export const apiUrl = `/projectfinder`;
 
 export function makeApiUrl(path) {
-  if (!path.startsWith("/")) {
+  if (!path.startsWith('/')) {
     path = `/${path}`;
   }
   return `${apiUrl}${path}`;
@@ -25,7 +25,7 @@ export async function fetchJson(path, method, data = null, token = null) {
   const response = await fetch(makeApiUrl(path), {
     method: method,
     headers: {
-      "Content-Type": data ? "application/json" : null,
+      'Content-Type': data ? 'application/json' : null,
       Authorization: token ? `Bearer ${token}` : null,
     },
     body: data ? JSON.stringify(data) : null,

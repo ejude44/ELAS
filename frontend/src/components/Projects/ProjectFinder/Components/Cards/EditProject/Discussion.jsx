@@ -6,8 +6,8 @@ import {
   TextField,
   Divider,
 } from '@material-ui/core';
-import { Paper, Container } from '@material-ui/core';
-import IconButton from '@material-ui/core/IconButton';
+import { Paper } from '@material-ui/core';
+
 import SendOutlinedIcon from '@material-ui/icons/SendOutlined';
 import { deepOrange } from '@material-ui/core/colors';
 import { Avatar } from '@material-ui/core';
@@ -26,8 +26,6 @@ const useStyles = makeStyles((theme) => ({
     display: 'block',
     flexWrap: 'wrap',
     '& > *': {
-      // margin: theme.spacing(1),
-      // width: theme.spacing(30),
       height: theme.spacing(100),
     },
   },
@@ -39,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: deepOrange[500],
   },
   questions: {
-    lineHeight: 3,
+    lineHeight: 2,
   },
 }));
 
@@ -47,7 +45,8 @@ export default function Discussion({ id }) {
   const userCtx = useContext(UserContext);
   const { createComment } = useCreateComment(id, userCtx.id);
   const [questionsCount, setQuestionsCount] = useState(0);
-  const [loadedComments, setLoadedComments] = useState();
+  const [loadedComments, setLoadedComments] = useState([]);
+
   const { comments, refetch } = useComments(id);
   const [value, setValue] = useState({
     comment: '',
@@ -67,7 +66,7 @@ export default function Discussion({ id }) {
         setQuestionsCount(hasComment.length);
       }
     }
-  }, [value, questionsCount, comments]);
+  }, [comments]);
 
   const onChange = (event) => {
     setValue({ ...value, 'comment': event.target.value });
@@ -77,8 +76,10 @@ export default function Discussion({ id }) {
     if (value.comment === '') {
       return;
     } else {
-      createComment(value, value.parent);
+      await createComment(value, value.parent);
+
       await refetch();
+
       setValue({ ...value, 'comment': '' });
     }
   };
@@ -90,34 +91,47 @@ export default function Discussion({ id }) {
       <Grid container direction="column">
         <Paper
           className={classes.root}
-          style={{ maxHeight: 300, overflow: 'auto', padding: 10 }}
+          style={{ maxHeight: 400, overflow: 'auto', padding: 5 }}
         >
           <List>
-            <Grid item className={classes.startDiscussion}>
-              <Avatar className={classes.orange} style={{ marginRight: 5 }}>
-                {userCtx
-                  ? Array.from(userCtx.firstName)[0].toUpperCase() +
-                    Array.from(userCtx.lastName)[0].toUpperCase()
-                  : ''}
-              </Avatar>
-              <TextField
-                multiline
-                rowsMax={3}
-                type="text"
-                size="small"
-                variant="outlined"
-                fullWidth
-                onChange={onChange}
-                value={value.comment}
-                style={{ marginRight: 10 }}
-                placeholder="Ask a Question"
-              />
-              <div onClick={handleSendComment}>
-                <SendOutlinedIcon style={{ color: 'FF6500' }} />
-              </div>
+            <Grid container>
+              <Grid item xs={2}>
+                <Avatar className={classes.orange} style={{ marginRight: 5 }}>
+                  {userCtx
+                    ? Array.from(userCtx.firstName)[0].toUpperCase() +
+                      Array.from(userCtx.lastName)[0].toUpperCase()
+                    : ''}
+                </Avatar>
+              </Grid>
+              <Grid item xs={8}>
+                <TextField
+                  multiline
+                  rowsMax={3}
+                  type="text"
+                  size="small"
+                  variant="outlined"
+                  fullWidth
+                  onChange={onChange}
+                  value={value.comment}
+                  style={{ marginRight: 5 }}
+                  placeholder="Ask a Question"
+                />
+              </Grid>
+              <Grid item xs={2}>
+                <div onClick={handleSendComment}>
+                  <SendOutlinedIcon style={{ color: 'FF6500' }} />
+                </div>
+              </Grid>
             </Grid>
-            <Grid item className={classes.questions}>
-              {questionsCount} Question(s)
+
+            <Grid item>
+              <Typography
+                gutterBottom
+                className={classes.questions}
+                style={{ fontSize: 12 }}
+              >
+                {questionsCount} Question(s)
+              </Typography>
             </Grid>
 
             <Grid item>
@@ -126,14 +140,7 @@ export default function Discussion({ id }) {
                   {loadedComments.map((comment, index) => (
                     <Grid item xs={12} key={index}>
                       <Grid container key={Math.random() * 10}>
-                        <Comments
-                          comments={comments}
-                          comment={comment}
-                          id={id}
-                          // handleSendComment={handleSendComment}
-                          // loggedInUserId={loggedInUserId}
-                          refetch={refetch}
-                        />
+                        <Comments comment={comment} id={id} refetch={refetch} />
                       </Grid>
                       <Divider></Divider>
                     </Grid>

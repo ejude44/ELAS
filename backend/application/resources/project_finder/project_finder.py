@@ -73,7 +73,7 @@ def accept_application(id=None):
     membership.update({Membership.status:status},synchronize_session=False)   
     session.commit()
 
-    return 'sucess'
+    return 'success'
 
 #Remove Application Request
 @project_finder.route("/memberships/<int:id>", methods=['DELETE'])
@@ -82,7 +82,7 @@ def remove_application(id=None):
        
     session.commit()
 
-    return 'sucess'
+    return 'success'
    
 
 
@@ -120,22 +120,26 @@ def get_project_members(id=None):
 
     return jsonify(response)
 
-
+#SearchProjects applications
 #Get UserProjectMembershipList
 @project_finder.route("/memberships/users/<int:id>", methods=['GET'])
 def get_user_Project_membership(id=None):
     if request.method == 'GET':
-        projects = session.query(Projects).join(Membership).filter(Membership.user_id == id).all()
+        projects = session.query(Projects).join(Membership).where(Membership.user_id == id).all()
         response = []
-        for i in projects:
-            response.append({'id': i.id,
-            'title': i.title,'faculty':i.faculty,
-        'description':i.description,
-        'degree':i.degree,
-        'skills': i.skills,
-        'maxMembers': i.max_members,
-        'createdBy':i.user_id,
-        'type': i.type})
+        for i in projects:          
+           for j in i.membership:
+
+             response.append({'id': i.id,
+                'title': i.title,'faculty':i.faculty,
+                 'description':i.description,
+                  'degree':i.degree,
+                  'skills': i.skills,
+                 'maxMembers': i.max_members,
+                 'createdBy':i.user_id,
+                  'type': i.type,
+                  'status': j.status
+                  })
 
         return jsonify(response)
 

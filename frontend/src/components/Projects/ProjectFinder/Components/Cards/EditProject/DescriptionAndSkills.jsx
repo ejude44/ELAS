@@ -57,7 +57,7 @@ export default function DescriptionAndSkills(props) {
                 <Typography className={classes.description}>
                   Skills Required
                 </Typography>
-                <Typography>works on skills</Typography>
+               
 
                 {value.skills ? (
                   <>

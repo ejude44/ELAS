@@ -22,6 +22,7 @@ import { useComments, useCreateComment } from '../../api/discussion/hooks';
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en.json';
 import ReactTimeAgo from 'react-time-ago';
+import MoreVertOutlinedIcon from '@material-ui/icons/MoreVertOutlined';
 
 TimeAgo.addLocale(en);
 
@@ -43,18 +44,18 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: deepOrange[500],
   },
   grid: {
-    border: '1px solid grey',
+    border: '2px solid grey',
     borderRadius: 5,
     padding: 4,
     width: 'inherit',
 
-    margin: 5,
+    margin: 1,
   },
 }));
 
-export default function Comments({ comment, id, comments }) {
+export default function Comments({ comment, id }) {
   const userCtx = useContext(UserContext);
-  const { refetch } = useComments(id);
+  const { comments, refetch } = useComments(id);
   const { createComment } = useCreateComment(id, userCtx.id);
   const [loadedReplies, setLoadedReplies] = useState();
 
@@ -67,7 +68,7 @@ export default function Comments({ comment, id, comments }) {
         setLoadedReplies(hasReply);
       }
     }
-  }, [comments, comment]);
+  }, [comments]);
 
   const [value, setValue] = useState({
     comment: '',
@@ -84,76 +85,101 @@ export default function Comments({ comment, id, comments }) {
     if (value.comment === '') {
       return;
     } else {
-      createComment(value, parentId);
-      setValue({ ...value, 'comment': '' });
+      await createComment(value, parentId);
       await refetch();
+      setValue({ ...value, 'comment': '' });
     }
   };
   const classes = useStyles();
 
   return (
     <>
-      <Container>
-        <Grid container>
-          <Grid item key={Math.random() * 10} className={classes.grid}>
-            <Grid item style={{ display: 'flex' }}>
-              <Avatar className={classes.orange} style={{ marginRight: 10 }}>
+      <Grid container>
+        <Grid item key={Math.random() * 10} className={classes.grid}>
+          <Grid container>
+            <Grid item xs={2}>
+              <Avatar className={classes.orange}>
                 {comment
                   ? Array.from(comment.firstname)[0].toUpperCase() +
                     Array.from(comment.lastname)[0].toUpperCase()
                   : ''}
-              </Avatar>{' '}
-              {comment.firstname + ' ' + comment.lastname}
+              </Avatar>
             </Grid>
-            <span style={{ display: 'block' }}>
-              <ReactTimeAgo date={comment.created_at} locale="en-US" />
-            </span>
-
-            {comment.description}
-            <Divider></Divider>
-            <Grid item>
-              {loadedReplies ? (
-                // <Container>
-                <>
-                  {loadedReplies.map((reply, index) => (
-                    <Grid item xs={12} key={index}>
-                      <Grid container key={Math.random() * 10}>
-                        {reply.children == comment.id ? (
-                          <Reply reply={reply} />
-                        ) : (
-                          ''
-                        )}
-                      </Grid>
-                    </Grid>
-                  ))}
-                </>
-              ) : (
-                // </Container>
-                <Box sx={{ display: 'flex' }}>
-                  <CircularProgress />
-                </Box>
-              )}
+            <Grid item xs={8}>
+              <Grid item>
+                <Typography variant="body1">
+                  {comment.firstname + ' ' + comment.lastname}
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography
+                  variant="body2"
+                  gutterBottom
+                  style={{ fontSize: 12 }}
+                >
+                  <ReactTimeAgo
+                    date={Date.parse(comment.created_at)}
+                    locale="en-US"
+                  />
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid item xs>
+              <MoreVertOutlinedIcon
+                style={{ color: '#FF6500' }}
+              ></MoreVertOutlinedIcon>
             </Grid>
           </Grid>
-          <Grid item style={{ display: 'flex' }}>
-            <TextField
-              multiline
-              rowsMax={2}
-              onChange={onChange}
-              type="text"
-              size="small"
-              variant="outlined"
-              fullWidth
-              value={value.comment}
-              style={{ marginRight: 10 }}
-              placeholder="Reply to Question"
-            />
-            <div onClick={(e) => handleReply(e, comment.id)}>
-              <SendOutlinedIcon style={{ color: 'FF6500' }} />
-            </div>
+          <Grid item>
+            <Typography gutterBottom variant="body1">
+              {comment.description}
+            </Typography>
+          </Grid>
+          <Divider></Divider>
+          <Typography gutterBottom style={{ fontSize: 12 }}>
+            {' '}
+            see comment(s)
+          </Typography>
+          <Grid item>
+            {loadedReplies ? (
+              <>
+                {loadedReplies.map((reply, index) => (
+                  <Grid item key={index}>
+                    <Grid container key={Math.random() * 10}>
+                      {reply.children == comment.id ? (
+                        <Reply reply={reply} />
+                      ) : (
+                        ''
+                      )}
+                    </Grid>
+                  </Grid>
+                ))}
+              </>
+            ) : (
+              <Box sx={{ display: 'flex' }}>
+                <CircularProgress />
+              </Box>
+            )}
           </Grid>
         </Grid>
-      </Container>
+        <Grid item style={{ display: 'flex' }}>
+          <TextField
+            multiline
+            rowsMax={2}
+            onChange={onChange}
+            type="text"
+            size="small"
+            variant="outlined"
+            fullWidth
+            value={value.comment}
+            style={{ marginRight: 5 }}
+            placeholder="Reply to Question"
+          />
+          <div onClick={(e) => handleReply(e, comment.id)}>
+            <SendOutlinedIcon style={{ color: 'FF6500' }} />
+          </div>
+        </Grid>
+      </Grid>
     </>
   );
 }

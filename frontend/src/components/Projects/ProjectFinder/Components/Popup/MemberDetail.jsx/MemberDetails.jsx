@@ -18,7 +18,6 @@ const useStyles = makeStyles((theme) => ({
     '& > *': {
       margin: theme.spacing(1),
       width: theme.spacing(50),
-      //   height: theme.spacing(10),
     },
   },
   button: {
@@ -27,18 +26,12 @@ const useStyles = makeStyles((theme) => ({
     color: 'white',
   },
   details: {
-    font: 'Roboto',
-    fontFamily: 'Roboto',
     fontWeight: 700,
     fontSize: 18,
-    color: '#000000',
   },
   myName: {
-    font: 'Roboto',
-    fontFamily: 'Roboto',
     fontWeight: 500,
     fontSize: 23,
-    color: '#000000',
   },
   span: {
     display: 'flex',
@@ -71,64 +64,63 @@ export default function MemberDetails(props) {
 
   return (
     <Grid container direction="column">
-      <div>
-        <Backdrop className={classes.backdrop} open={open}>
-          <Paper className={classes.root}>
-            <span className={classes.span} onClick={toggleMemberDetails}>
-              <button type="button">
-                <Tooltip title="close Dialog">
-                  <CloseIcon />
-                </Tooltip>
-              </button>
-            </span>
-            <div style={{ padding: 10 }}>
-              <Grid item className={classes.img}>
-                <Avatar
-                  alt="profile pic"
-                  src={isClicked ? isClicked.foto : ''}
-                  className={classes.large}
-                />
-              </Grid>
-              <Grid item className={classes.name}>
-                <Typography className={classes.myName}>
-                  {isClicked ? isClicked.firstname : ''}{' '}
-                  {isClicked ? isClicked.lastname : ''}
-                </Typography>
-              </Grid>
-              <Typography className={classes.name}>
-                {isClicked ? isClicked.degree : ''}
+      <Backdrop className={classes.backdrop} open={open}>
+        <Paper className={classes.root}>
+          <span className={classes.span} onClick={toggleMemberDetails}>
+            <button type="button">
+              <Tooltip title="close Dialog">
+                <CloseIcon />
+              </Tooltip>
+            </button>
+          </span>
+          <Grid item style={{ padding: 5 }}>
+            <Grid item className={classes.img}>
+              <Avatar
+                alt="profile pic"
+                src={isClicked ? isClicked.foto : ''}
+                className={classes.large}
+              />
+            </Grid>
+            <Grid item className={classes.name}>
+              <Typography className={classes.myName}>
+                {isClicked ? isClicked.firstname : ''}{' '}
+                {isClicked ? isClicked.lastname : ''}
               </Typography>
-              <Grid item>
-                <Typography className={classes.details}>About me</Typography>
-              </Grid>
-              <Grid item>
-                <Typography>
-                  {isClicked ? isClicked.description : ''}
-                </Typography>
-              </Grid>
+            </Grid>
+            <Typography className={classes.name}>
+              {isClicked ? isClicked.degree : ''}
+            </Typography>
+            <Grid item>
+              <Typography className={classes.details} gutterBottom>
+                About me
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography>{isClicked ? isClicked.description : ''}</Typography>
+            </Grid>
 
-              <Grid item>
-                <Typography className={classes.details}>Skills</Typography>
-                {/* <Typography>{isClicked ? isClicked.skills : ''}</Typography> */}
+            <Grid item>
+              <Typography className={classes.details} gutterBottom>
+                Skills
+              </Typography>
 
-                {isClicked.skills ? (
-                  <>
-                    <Grid container spacing={1}>
-                      {isClicked.skills.map((skill, index) => (
-                        <Grid item key={index}>
-                          <Chip label={skill} />
-                        </Grid>
-                      ))}
-                    </Grid>
-                  </>
-                ) : (
-                  <CircularProgress />
-                )}
-              </Grid>
-            </div>
-          </Paper>
-        </Backdrop>
-      </div>
+              {isClicked.skills ? (
+                <>
+                  <Grid container spacing={1}>
+                    {isClicked.skills.map((skill, index) => (
+                      <Grid item key={index}>
+                        <Chip label={skill} />
+                      </Grid>
+                    ))}
+                  </Grid>
+                </>
+              ) : (
+                <CircularProgress />
+              )}
+            </Grid>
+          </Grid>
+        </Paper>
+      </Backdrop>
     </Grid>
   );
 }

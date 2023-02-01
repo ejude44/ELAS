@@ -18,6 +18,9 @@ import AvatarMyProject from '../../AvatarMyProject/AvatarMyProject';
 import { useProjectTeamMembers } from '../../../api/project/hooks';
 import { CircularProgress } from '@material-ui/core';
 import { AvatarGroup } from '@material-ui/lab';
+import { useMyMembershipStatus } from '../../../api/project/hooks';
+import { useEffect, useState } from 'react';
+import customClasses from './../../../Css/Card.module.css';
 
 const useStyles = makeStyles({
   card: {
@@ -58,12 +61,28 @@ const useStyles = makeStyles({
 export default function MyProjects({ filteredProject, handleOpen }) {
   const { members } = useProjectMembers(filteredProject.id);
   const { teamMembers } = useProjectTeamMembers(filteredProject.id);
+  const { MEM } = useMyMembershipStatus(filteredProject.id, null);
+  const [appMem, setAppMem] = useState();
+
+  useEffect(() => {
+    if (MEM !== undefined) {
+      const mems = MEM.filter(
+        (mem) =>
+          mem.status === 'pending' && mem.project_id == filteredProject.id
+      );
+
+      setAppMem(mems);
+    }
+  }, [MEM]);
 
   const classes = useStyles();
 
   return (
     <>
-      <Card style={{ borderRadius: 5, width: 310, height: 280 }}>
+      <Card
+        style={{ borderRadius: 5, width: 310, height: 280 }}
+        className={customClasses.Card}
+      >
         <CardMedia
           component="img"
           height="80"
@@ -76,11 +95,12 @@ export default function MyProjects({ filteredProject, handleOpen }) {
           <Typography className={classes.title}>
             {filteredProject.title.length <= 32
               ? filteredProject.title
-              : filteredProject.title.substr(0, 32) + '...'}
+              : filteredProject.title.substr(0, 31) + '...'}
           </Typography>
           <Grid item>
             <Typography className={classes.applications}>
-              #Application(s) {members ? members.length : 'no applications yet'}{' '}
+              # New Application(s){' '}
+              {appMem ? appMem.length : 'no applications yet'}
             </Typography>
           </Grid>
         </CardContent>
@@ -91,8 +111,11 @@ export default function MyProjects({ filteredProject, handleOpen }) {
 
               {teamMembers ? (
                 <AvatarGroup max={3}>
-                  {teamMembers.map((filteredMembers) => (
-                    <AvatarMyProject filteredMembers={filteredMembers} />
+                  {teamMembers.map((filteredMembers, index) => (
+                    <AvatarMyProject
+                      filteredMembers={filteredMembers}
+                      key={index}
+                    />
                   ))}
                 </AvatarGroup>
               ) : (

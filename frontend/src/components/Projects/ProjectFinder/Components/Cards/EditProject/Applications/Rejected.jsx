@@ -1,43 +1,23 @@
-import { Grid, Typography, makeStyles, Box } from '@material-ui/core';
+import { Grid, Typography, makeStyles} from '@material-ui/core';
 import { Paper } from '@material-ui/core';
-import { useState } from 'react';
-import { Button } from '@material-ui/core';
-import EditIcon from '@material-ui/icons/Edit';
-import { Tooltip } from '@material-ui/core';
 import * as React from 'react';
 import { CircularProgress } from '@material-ui/core';
 import { deepOrange } from '@material-ui/core/colors';
-import TeamMember from '../../ApplicationMember/TeamMember';
+
 import RejectedMembers from '../../ApplicationMember/RejectedMembers';
-import { useEffect } from 'react';
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: 'blockk',
+    display: 'block',
     flexWrap: 'wrap',
     '& > *': {
       margin: theme.spacing(1),
-      //   width: theme.spacing(30),
-      //   height: theme.spacing(35),
+    
     },
   },
-  rootAvatar: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    alignItems: 'right',
-    '& > *': {
-      margin: theme.spacing(0),
-    },
-  },
-  name: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    whiteSpace: 'nowrap',
-    //   overflow: 'hidden',
-    textOverflow: 'clip',
-    marginLeft: 40,
-  },
+ 
+ 
   orange: {
     color: theme.palette.getContrastText(deepOrange[500]),
     backgroundColor: deepOrange[500],
@@ -57,7 +37,7 @@ export default function Rejected(props) {
   const { rejected, setOpen, handleRemove, SETID, setIsClicked, handleAccept } =
     props;
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  
 
   const handleProfile = (g) => {
     SETID(g);

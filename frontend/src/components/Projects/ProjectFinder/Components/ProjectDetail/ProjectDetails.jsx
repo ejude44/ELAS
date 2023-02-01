@@ -1,5 +1,5 @@
 import { Typography, Grid } from '@material-ui/core';
-import { Divider } from '@material-ui/core';
+
 import { makeStyles } from '@material-ui/core/styles';
 import Title from '../Cards/EditProject/Title';
 import Details from '../Cards/EditProject/Details';
@@ -59,62 +59,60 @@ export default function ProjectDetails({
 
   return (
     <Grid container direction="column">
-      <div style={{ padding: 20 }}>
-        <Grid container direction="row" spacing={2}>
-          <Grid item xs={6} className={classes.grid}>
-            <Title
-              value={value}
-              handleClose={handleClose}
-              open={open}
-              handleOnEditTitleClick={handleOnEditTitleClick}
-            />
+      <Grid container direction="row" spacing={2} style={{ padding: 20 }}>
+        <Grid item xs={6} className={classes.grid}>
+          <Title
+            value={value}
+            handleClose={handleClose}
+            open={open}
+            handleOnEditTitleClick={handleOnEditTitleClick}
+          />
 
-            <EditTitle
-              open={open}
-              handleClose={handleClose}
-              value={value}
-              handleSave={handleSave}
-              setValue={setValue}
-            />
-          </Grid>
-
-          <Grid item xs={6} className={classes.grid}>
-            <Details
-              value={value}
-              handleClose={handleClose}
-              open={open}
-              handleOnEditDetailsClick={handleOnEditDetailsClick}
-            />
-
-            <EditDetails
-              value={value}
-              handleClose={handleClose}
-              open={open}
-              handleSave={handleSave}
-              setValue={setValue}
-            />
-          </Grid>
-
-          <Grid item xs={6} className={classes.grid}>
-            <DescriptionAndSkills
-              value={value}
-              handleClose={handleClose}
-              open={open}
-              handleOnEditDescSkillsClick={handleOnEditDescSkillsClick}
-            />
-            <EditDescSkills
-              value={value}
-              handleClose={handleClose}
-              open={open}
-              handleSave={handleSave}
-              setValue={setValue}
-            />
-          </Grid>
-          <Grid item xs={6} className={classes.grid}>
-            <Discussion value={value} id={id} />
-          </Grid>
+          <EditTitle
+            open={open}
+            handleClose={handleClose}
+            value={value}
+            handleSave={handleSave}
+            setValue={setValue}
+          />
         </Grid>
-      </div>
+
+        <Grid item xs={6} className={classes.grid}>
+          <Details
+            value={value}
+            handleClose={handleClose}
+            open={open}
+            handleOnEditDetailsClick={handleOnEditDetailsClick}
+          />
+
+          <EditDetails
+            value={value}
+            handleClose={handleClose}
+            open={open}
+            handleSave={handleSave}
+            setValue={setValue}
+          />
+        </Grid>
+
+        <Grid item xs={6} className={classes.grid}>
+          <DescriptionAndSkills
+            value={value}
+            handleClose={handleClose}
+            open={open}
+            handleOnEditDescSkillsClick={handleOnEditDescSkillsClick}
+          />
+          <EditDescSkills
+            value={value}
+            handleClose={handleClose}
+            open={open}
+            handleSave={handleSave}
+            setValue={setValue}
+          />
+        </Grid>
+        <Grid item xs={6} className={classes.grid}>
+          <Discussion value={value} id={id} />
+        </Grid>
+      </Grid>
     </Grid>
   );
 }

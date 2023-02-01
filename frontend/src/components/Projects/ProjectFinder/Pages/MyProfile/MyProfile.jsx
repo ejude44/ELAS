@@ -8,6 +8,8 @@ import { useEditProfile } from '../../api/user/hooks';
 import { useContext } from 'react';
 import AuthContext from '../../Store/AuthContext';
 import UserContext from '../../Store/UserContext';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 
 const useStyles = makeStyles((theme) => ({
   align: {
@@ -21,7 +23,17 @@ const useStyles = makeStyles((theme) => ({
     color: '#000000',
     lineHeight: 3,
   },
+  root: {
+    width: '100%',
+    '& > * + *': {
+      marginTop: theme.spacing(2),
+    },
+  },
 }));
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 export default function MyProfile() {
   const authCtx = useContext(AuthContext);
@@ -53,17 +65,29 @@ export default function MyProfile() {
     await editProfile(userCtx.id, value, authCtx.token);
     await userCtx.getLoggedInUser();
     setStatus('saved');
+    setOpen(true);
   };
 
   const classes = useStyles();
+  const [open, setOpen] = useState(false);
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
   return (
     <>
       <Grid container direction="column">
         <Grid item>
-          <Typography className={classes.myProfile}>My Profile</Typography>
+          <Typography className={classes.myProfile} gutterBottom>
+            My Profile
+          </Typography>
         </Grid>
 
-        <Grid container direction="row" spacing={2}>
+        <Grid container spacing={2}>
           <Grid item xs={12} sm={8} lg={3}>
             <ProfileCard
               props={{ value, handleSave, setValue, status, setStatus }}
@@ -82,6 +106,12 @@ export default function MyProfile() {
             />
           </Grid>
         </Grid>
+
+        <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
+          <Alert onClose={handleClose} severity="success">
+            Changes saved!
+          </Alert>
+        </Snackbar>
       </Grid>
     </>
   );
