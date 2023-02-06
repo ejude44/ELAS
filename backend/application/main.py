@@ -1,12 +1,13 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import create_access_token
+from orm_interface.entities.project_finder.projectfinder import ProjectFinder_User
 from .extensions import bcrypt
 from dotenv import load_dotenv
 import os
 import yaml
 from multiprocessing import Process
 load_dotenv()
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from orm_interface.entities.user import User
 from orm_interface.base import Base, Session, engine
@@ -27,18 +28,26 @@ def adminUser():
     lastname = "Admin"
 
     user = session.query(User).filter(User.email == email).first()
+    pf_user = session.query(ProjectFinder_User).filter(ProjectFinder_User.email == email).first()
 
     if user is None:
         hash_password = bcrypt.generate_password_hash(password).decode("utf-8")
         new_user = User(
-            firstname=firstname, lastname=lastname, email=email, password=hash_password,degree="",birthday="", description="", profile_image="", skills="",
-        )
+            firstname=firstname, lastname=lastname, email=email, password=hash_password)
         session.add(new_user)
         session.commit()
-        return jsonify({"success": "User registered"})
 
+    if  pf_user is None:
+        new_pf_user = ProjectFinder_User(email=email, degree=None, birthday=None,skills=None,profile_image=None,description='')
+        session.add(new_pf_user)
+        session.commit()
+        return jsonify({"success": "User registered"})
     else:
         return jsonify({"success": "Server initialized"})
+ 
+     
+    
+   
 
 
 @main.route("/login", methods=["POST"])
@@ -74,19 +83,31 @@ def register():
     lastname = request.get_json()["lastname"]
 
     user = session.query(User).filter(User.email == email).first()
+    pf_user = session.query(ProjectFinder_User).filter(ProjectFinder_User.email == email).first()
 
     if user is None:
         hash_password = bcrypt.generate_password_hash(password).decode("utf-8")
         new_user = User(
-            firstname=firstname, lastname=lastname, email=email, password=hash_password,degree="",birthday="", description="", profile_image="", skills="",
-        
-        )
+            firstname=firstname, lastname=lastname, email=email, password=hash_password)
         session.add(new_user)
+        session.commit()
+
+    if  pf_user is None:
+        new_pf_user = ProjectFinder_User(email=email,degree='',birthday='', description='', profile_image='', skills='')
+        session.add(new_pf_user)
         session.commit()
         return jsonify({"success": "User registered"})
 
     else:
         return jsonify({"error": "User is already registered"})
+
+    # if  pf_user is None:
+    #     new_pf_user = ProjectFinder_User(id=None,email=email,degree=None,birthday=None, description=None, profile_image=None, skills=None,)
+
+    #     session.add(new_pf_user)
+    #     session.commit()
+
+   
 
 
 @main.route("/commence_scraping", methods=["GET", "POST"])
@@ -157,13 +178,3 @@ def gete3course():
             "grade_effort": e3rating.grade_effort
         })
     return jsonify(response)
-
-
-
-
-
-
-    
-   
-
-

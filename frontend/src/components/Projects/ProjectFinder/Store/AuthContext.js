@@ -1,7 +1,7 @@
-import React, { useState, useEffect,} from 'react';
+import React, { useState, useEffect } from "react";
 
 const AuthContext = React.createContext({
-  token: '',
+  token: "",
   isLoggedIn: false,
   //   login: (token) => {},
   //   logout: () => {},
@@ -18,11 +18,10 @@ const AuthContext = React.createContext({
 // };
 
 const retrieveStoredToken = () => {
-  const token = JSON.parse(sessionStorage.getItem('elas_user')).token;
+  const token = JSON.parse(sessionStorage.getItem("elas_user")).token;
   // const storedExpirationDate = JSON.parse(window.atob(token.split('.')[1])).exp;
 
   // const remainingTime = calculateRemainingTime(storedExpirationDate);
-
 
   return {
     token: token,
@@ -40,21 +39,14 @@ export const AuthContextProvider = (props) => {
 
   const userIsLoggedIn = !!token;
 
-  
-
   useEffect(() => {
     if (tokenData) {
-    
     }
-  }, [
-    tokenData,
-    
-  ]);
+  }, [tokenData]);
 
   const contextValue = {
     token: token,
     isLoggedIn: userIsLoggedIn,
- 
   };
 
   return (

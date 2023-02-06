@@ -1,27 +1,27 @@
-from sqlalchemy import Boolean, Column, Integer, String, Float, ForeignKey,DATETIME,DateTime,ARRAY
+from sqlalchemy import Boolean, Column, Integer, String, ForeignKey,DATETIME,DateTime,ARRAY
 from orm_interface.base import Base
 from sqlalchemy.orm import relationship
 
 class ProjectFinder_User(Base):
     __tablename__ = "projectfinder_user"
-    id = Column(Integer, ForeignKey('user.id'), primary_key= True)
-    firstname = Column(String)
-    lastname = Column(String)
-    email = Column(String)
-    password = Column(String)
+    id = Column(Integer,  autoincrement=True ,primary_key= True)
+    email = Column(String, ForeignKey('user.email'), unique=True)
     profile_image= Column(String)
     degree=Column(String)
     description= Column(String)
     birthday = Column(String)
     skills = Column(ARRAY(String))
+    user = relationship('User', backref='user')
+    projects = relationship('Projects', backref='user')
+    membership = relationship('Membership', backref='user')
+    discussion = relationship('Discussion', backref='user')
 
     
 
-    def __init__(self, firstname, lastname, email, password, degree,birthday,skills, description,profile_image):
-        self.firstname = firstname
-        self.lastname = lastname
-        self.email = email
-        self.password = password
+    def __init__(self, email,degree,birthday,skills, description,profile_image):
+       
+     
+        self.email= email
         self.degree= degree
         self.birthday= birthday
         self.skills= skills
@@ -42,7 +42,7 @@ class Projects(Base):
     link = Column(String)
     skills = Column(ARRAY(String))
     type = Column(String)
-    user_id = Column(Integer, ForeignKey('user.id'))
+    user_id = Column(Integer, ForeignKey('projectfinder_user.id'))
     membership = relationship('Membership', backref='projects',cascade="all, delete", passive_deletes=True)
     discussion = relationship('Discussion', backref='projects',cascade="all, delete", passive_deletes=True)
 
@@ -62,7 +62,7 @@ class Projects(Base):
 class Membership(Base):
     __tablename__ = "membership"
     id = Column(Integer,primary_key=True,autoincrement=True, unique= True)
-    user_id  = Column(Integer, ForeignKey('user.id'), primary_key=True)
+    user_id  = Column(Integer, ForeignKey('projectfinder_user.id'), primary_key=True)
     project_id = Column(Integer, ForeignKey('projects.id', ondelete='CASCADE'),primary_key=True)
     status = Column(String)
 
@@ -76,7 +76,7 @@ class Discussion(Base):
     __tablename__ = "discussion"
     id = Column(Integer, primary_key=True, autoincrement=True, unique=True)
     project_id = Column(Integer, ForeignKey('projects.id', ondelete='CASCADE'),primary_key = True)
-    user_id = Column(Integer, ForeignKey('user.id'), primary_key=True)
+    user_id = Column(Integer, ForeignKey('projectfinder_user.id'), primary_key=True)
     created_at = Column(DateTime)
     description = Column(String)
     children = Column(String)

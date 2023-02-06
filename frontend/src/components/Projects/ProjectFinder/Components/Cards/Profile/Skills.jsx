@@ -4,52 +4,48 @@ import {
   TextField,
   Typography,
   makeStyles,
-} from '@material-ui/core';
-import { Paper } from '@material-ui/core';
-import { Button } from '@material-ui/core';
-import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
-import { Tooltip } from '@material-ui/core';
-import SaveOutlinedIcon from '@material-ui/icons/SaveOutlined';
-import { useState } from 'react';
-import { Autocomplete } from '@material-ui/lab';
-import { skills } from '../../../reuse/reuse';
-import Chip from '@material-ui/core/Chip';
-import { CircularProgress } from '@material-ui/core';
-import { useEffect } from 'react';
+} from "@material-ui/core";
+import { Paper } from "@material-ui/core";
+import { Button } from "@material-ui/core";
+import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
+import { Tooltip } from "@material-ui/core";
+import SaveOutlinedIcon from "@material-ui/icons/SaveOutlined";
+import { useState } from "react";
+import { Autocomplete } from "@material-ui/lab";
+import { skills } from "../../../reuse/reuse";
+import Chip from "@material-ui/core/Chip";
+import { CircularProgress } from "@material-ui/core";
+import { useEffect } from "react";
 
-import { List } from '@material-ui/core';
+import { List } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: 'block',
+    display: "block",
 
-    flexWrap: 'wrap',
-    '& > *': {
+    flexWrap: "wrap",
+    "& > *": {
       margin: theme.spacing(1),
       // width: theme.spacing(30),
       height: theme.spacing(35),
     },
   },
   saveSkills: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    alignItems: 'right',
-    verticalAlign: 'text-bottom',
+    display: "flex",
+    justifyContent: "flex-end",
+    alignItems: "right",
+    verticalAlign: "text-bottom",
     marginTop: 120,
   },
   profileSkills: {
     fontWeight: 700,
     fontSize: 22,
-    fontFamily: 'Roboto',
-    font: 'Roboto',
-    color: '#000000',
-    lineHeight: 1.5,
   },
   skillsBox: {
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
     border: 0,
-    borderColor: ' #303f9f',
-    width: '100%',
+    borderColor: " #303f9f",
+    width: "100%",
   },
 }));
 
@@ -62,23 +58,23 @@ export default function Skills({ props }) {
 
   const onChange = (event, skills) => {
     // setValue({ ...value, 'skills': event.target.value });
-    setValue({ ...value, 'skills': skills });
+    setValue({ ...value, skills: skills });
 
     setHideButton(false);
-    setStatus('save');
+    setStatus("save");
   };
   const onKeyDown = (event) => {
-    if (event.key === 'Enter' || event.key === 'Escape') {
+    if (event.key === "Enter" || event.key === "Escape") {
       event.target.blur();
     }
   };
 
   const onBlur = (event) => {
-    if (event.target.value.trim() === '') {
+    if (event.target.value.trim() === "") {
       return;
       // setValue(value.skills);
     } else {
-      setValue({ ...value, 'skills': event.target.value });
+      setValue({ ...value, skills: event.target.value });
     }
     setHideButton(true);
   };
@@ -94,7 +90,7 @@ export default function Skills({ props }) {
       <Grid container direction="column">
         <Paper
           className={classes.root}
-          style={{ maxHeight: 300, overflow: 'auto' }}
+          style={{ maxHeight: 300, overflow: "auto" }}
         >
           <List>
             <div style={{ padding: 5 }}>
@@ -103,7 +99,7 @@ export default function Skills({ props }) {
                 <Tooltip title="click  on the Text to begin editing">
                   <EditOutlinedIcon
                     fontSize="small"
-                    style={{ color: '#FF6500' }}
+                    style={{ color: "#FF6500" }}
                   />
                 </Tooltip>
               </Typography>
@@ -153,15 +149,15 @@ export default function Skills({ props }) {
                     onClick={handleSave}
                     style={{
                       marginLeft: 10,
-                      backgroundColor: '#FF6500',
-                      color: 'white',
+                      backgroundColor: "#FF6500",
+                      color: "white",
                     }}
                   >
                     <SaveOutlinedIcon fontSize="small" />
                     {status}
                   </Button>
                 ) : (
-                  ''
+                  ""
                 )}
               </Box>
             </div>

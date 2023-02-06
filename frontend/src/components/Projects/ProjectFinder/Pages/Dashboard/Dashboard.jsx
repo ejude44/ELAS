@@ -1,47 +1,35 @@
-import { Typography, Grid, Box, Button, Container } from '@material-ui/core';
-import { CircularProgress } from '@material-ui/core';
-import { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
-import CompleteProfile from '../../Components/Popup/CompleteProfile';
-import { makeStyles } from '@material-ui/core';
-import NewProject from '../../Components/Popup/NewProject';
-import { useGetLoggedInUserProjects } from '../../api/user/hooks';
-import { useGetLoggedInUserOtherProjects } from '../../api/user/hooks';
-import MyProjects from '../../Components/Cards/MyProjects/MyProjects';
-import Checkbox from '@material-ui/core/Checkbox';
-import FormLabel from '@material-ui/core/FormLabel';
-import FormControl from '@material-ui/core/FormControl';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { useContext } from 'react';
-import AuthContext from '../../Store/AuthContext';
-import ProjectDetail from '../../Components/Popup/ProjectDetail';
-import UserContext from '../../Store/UserContext';
+import { Typography, Grid, Box, Button, Container } from "@material-ui/core";
+import { CircularProgress } from "@material-ui/core";
+import { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
+import CompleteProfile from "../../Components/Popup/CompleteProfile";
+import { makeStyles } from "@material-ui/core";
+import NewProject from "../../Components/Popup/NewProject";
+import { useGetLoggedInUserProjects } from "../../api/user/hooks";
+import { useGetLoggedInUserOtherProjects } from "../../api/user/hooks";
+import MyProjects from "../../Components/Cards/MyProjects/MyProjects";
+import Checkbox from "@material-ui/core/Checkbox";
+import FormLabel from "@material-ui/core/FormLabel";
+import FormControl from "@material-ui/core/FormControl";
+import FormGroup from "@material-ui/core/FormGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import { useContext } from "react";
+import AuthContext from "../../Store/AuthContext";
+import ProjectDetail from "../../Components/Popup/ProjectDetail";
+import UserContext from "../../Store/UserContext";
 
 const useStyles = makeStyles((theme) => ({
- 
-  my: {
-    display: 'flex',
-    justifyContent: 'flex-start',
-    alignItems: 'left',
-  },
   myProjects: {
     fontWeight: 700,
-    lineHeight:3
+    lineHeight: 3,
   },
   dashboard: {
     fontWeight: 400,
     fontSize: 20,
-    fontFamily: 'Roboto',
-    font: 'Roboto',
-    color: '#000000',
+
     lineHeight: 2,
   },
-  box: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    alignItems: 'right',
-  },
+
   formControl: {
     margin: theme.spacing(0),
   },
@@ -54,10 +42,10 @@ export default function Dashboard() {
   const [openNewProject, setOpenNewProject] = useState(false);
   const [open, setOpen] = useState(false);
   const [opens, setOpens] = useState();
-  const [loadedUserProjects, setLoadedUserProjects] = useState('');
-  const [loadedUserOtherProjects, setLoadedUserOtherProjects] = useState('');
+  const [loadedUserProjects, setLoadedUserProjects] = useState("");
+  const [loadedUserOtherProjects, setLoadedUserOtherProjects] = useState("");
   const [isClicked, setIsClicked] = useState();
-  const [loadedProjects, setLoadedProjects] = useState('');
+  const [loadedProjects, setLoadedProjects] = useState("");
   const { projects, getLoggedInUserProjects } = useGetLoggedInUserProjects(
     userCtx.id,
     authCtx.token
@@ -66,33 +54,40 @@ export default function Dashboard() {
     userCtx.id,
     authCtx.token
   );
+  const [filteredPro, setFilteredPro] = useState([]);
 
   const history = useHistory();
 
   const classes = useStyles();
 
   const [state, setState] = useState({
-    My: false,
-    Other: false,
+    My: true,
+    Other: true,
   });
 
-  const handleChange = (event) => {
-    setState({ ...state, [event.target.name]: event.target.checked });
+  const handleChange = (status) => {
+    setState({ ...state, [status]: !state[status] });
   };
 
   useEffect(() => {
-    if (projects !== undefined) {
+    if (projects !== undefined && otherProjects !== undefined) {
       setLoadedUserProjects(projects);
-    }
-
-    if (otherProjects !== undefined && projects) {
       setLoadedUserOtherProjects(otherProjects);
-      setLoadedProjects([...projects, ...otherProjects]);
+
+      const data = projects.concat(otherProjects).filter((item) => {
+        if (state.My && item.user_id) {
+          return true;
+        }
+        if (state.Other && !item.user_id) {
+          return true;
+        }
+        return false;
+      });
+
+      setFilteredPro(data);
     }
 
-    if (loadedProjects !== undefined) {
-      loadedProjects.length >= 1 ? setNotFound(false) : setNotFound(true);
-    }
+    filteredPro.length >= 1 ? setNotFound(false) : setNotFound(true);
 
     userCtx.toComplete ? setOpen(true) : setOpen(false);
   }, [
@@ -100,18 +95,11 @@ export default function Dashboard() {
     loadedUserProjects,
     projects,
     otherProjects,
+    state,
     loadedUserOtherProjects,
+    filteredPro.length,
+    userCtx.toComplete,
   ]);
-
-  useEffect(() => {
-    if (state.My === true) {
-      setLoadedProjects([...projects]);
-    } else if (state.Other === true) {
-      setLoadedProjects([...otherProjects]);
-    } else if (otherProjects !== undefined && projects) {
-      setLoadedProjects([...otherProjects, ...projects]);
-    }
-  }, [state]);
 
   const handleClose = () => {
     setOpen(false);
@@ -128,11 +116,11 @@ export default function Dashboard() {
   const handleYes = () => {
     setOpen(false);
 
-    history.push('/profile');
+    history.push("/profile");
   };
 
   const handleOpen = (id) => {
-    setIsClicked(loadedProjects.find((x) => x.id === id));
+    setIsClicked(filteredPro.find((x) => x.id === id));
     setOpens(true);
   };
 
@@ -145,9 +133,13 @@ export default function Dashboard() {
     <Grid container direction="column">
       <Grid container>
         <Grid item xs={8}>
-          <Typography className={classes.dashboard}>Dashboard</Typography>
-          <Typography>Welcome:{userCtx.firstName} </Typography>
-          <Typography className={classes.myProjects}>My Projects</Typography>
+          <Typography className={classes.dashboard} gutterBottom>
+            Dashboard
+          </Typography>
+          <Typography gutterBottom>Welcome:{userCtx.firstName} </Typography>
+          <Typography className={classes.myProjects} gutterBottom>
+            My Projects
+          </Typography>
         </Grid>
         <Grid item xs={2}>
           <FormControl component="fieldset" className={classes.formControl}>
@@ -158,9 +150,9 @@ export default function Dashboard() {
                   <Checkbox
                     checked={state.My}
                     size="small"
-                    onChange={handleChange}
+                    onChange={() => handleChange("My")}
                     name="My"
-                    style={{ color: '#FF6500' }}
+                    style={{ color: "#FF6500" }}
                   />
                 }
                 label="My projects"
@@ -170,9 +162,9 @@ export default function Dashboard() {
                   <Checkbox
                     size="small"
                     checked={state.Other}
-                    onChange={handleChange}
+                    onChange={() => handleChange("Other")}
                     name="Other"
-                    style={{ color: '#FF6500' }}
+                    style={{ color: "#FF6500" }}
                   />
                 }
                 label="Other projects"
@@ -184,7 +176,7 @@ export default function Dashboard() {
           <Button
             onClick={handleNewProject}
             variant="contained"
-            style={{ color: 'white', backgroundColor: '#FF6500' }}
+            style={{ color: "white", backgroundColor: "#FF6500" }}
             size="small"
           >
             Create Project
@@ -193,10 +185,10 @@ export default function Dashboard() {
       </Grid>
 
       <Grid item>
-        {loadedProjects ? (
+        {filteredPro ? (
           <Container>
             <Grid container spacing={2}>
-              {loadedProjects.map((filteredProject, index) => (
+              {filteredPro.map((filteredProject, index) => (
                 <Grid item key={index} xs={12} md={4} sm={4}>
                   <MyProjects
                     filteredProject={filteredProject}
@@ -207,9 +199,7 @@ export default function Dashboard() {
             </Grid>
           </Container>
         ) : (
-          <Box sx={{ display: 'flex' }}>
-            <CircularProgress />
-          </Box>
+          <CircularProgress />
         )}
       </Grid>
 
@@ -237,7 +227,7 @@ export default function Dashboard() {
           You do not have any Project yet, Create or search for projects.
         </Typography>
       ) : (
-        ''
+        ""
       )}
 
       {opens && (

@@ -1,27 +1,27 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useGetLoggedInUser } from '../api/user/hooks';
+import React, { useState, useEffect } from "react";
+import { useGetLoggedInUser } from "../api/user/hooks";
 
 const UserContext = React.createContext({
-  id: '',
-  firstName: '',
-  lastName: '',
-  degree: '',
-  skills: '',
-  description: '',
-  foto: '',
-  getLoggedInUser: '',
+  id: "",
+  firstName: "",
+  lastName: "",
+  degree: "",
+  skills: "",
+  description: "",
+  foto: "",
+  getLoggedInUser: "",
 });
 
 export const UserContextProvider = (props) => {
-  const token = JSON.parse(sessionStorage.getItem('elas_user')).token;
+  const token = JSON.parse(sessionStorage.getItem("elas_user")).token;
   const [loadedUser, setLoadedUser] = useState({
-    'id': '',
-    'firstName': '',
-    'lastName': '',
-    'degree': '',
-    'skills': '',
-    'description': '',
-    'foto': '',
+    id: "",
+    firstName: "",
+    lastName: "",
+    degree: "",
+    skills: "",
+    description: "",
+    foto: "",
   });
   const { user, getLoggedInUser } = useGetLoggedInUser(token);
   const [toComplete, setToComplete] = useState(false);
@@ -31,29 +31,33 @@ export const UserContextProvider = (props) => {
       setLoadedUser(user);
       user.map((details) => {
         setLoadedUser({
-          'id': details.id,
-          'firstName': details.firstname,
-          'lastName': details.lastname,
-          'degree': details.degree,
-          'skills': details.skills,
-          'description': details.description,
-          'foto': details.profile_image,
+          id: details.id,
+          firstName: details.firstname,
+          lastName: details.lastname,
+          degree: details.degree,
+          skills: details.skills,
+          description: details.description,
+          foto: details.profile_image,
         });
+        return "";
       });
     }
     if (user !== null && user !== undefined) {
       user.map((details) => {
         if (
-          details.degree === '' ||
+          details.degree === "" ||
           details.skills === [] ||
-          details.description === ''
+          details.description === ""
         ) {
           setToComplete(true);
         } else {
           setToComplete(false);
         }
+        return " ";
       });
     }
+
+    console.log(user);
   }, [user, toComplete]);
 
   const contextValue = {

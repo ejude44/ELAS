@@ -1,25 +1,24 @@
-import { Typography, Grid } from '@material-ui/core';
+import { Grid } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import Title from "../Cards/EditProject/Title";
+import Details from "../Cards/EditProject/Details";
+import DescriptionAndSkills from "../Cards/EditProject/DescriptionAndSkills";
+import Discussion from "../Cards/EditProject/Discussion";
 
-import { makeStyles } from '@material-ui/core/styles';
-import Title from '../Cards/EditProject/Title';
-import Details from '../Cards/EditProject/Details';
-import DescriptionAndSkills from '../Cards/EditProject/DescriptionAndSkills';
-import Discussion from '../Cards/EditProject/Discussion';
+import EditTitle from "../Popup/EditProject/EditTitle";
 
-import EditTitle from '../Popup/EditProject/EditTitle';
-
-import EditDetails from '../Popup/EditProject/EditDetails';
-import EditDescSkills from '../Popup/EditProject/EditDescSkills';
+import EditDetails from "../Popup/EditProject/EditDetails";
+import EditDescSkills from "../Popup/EditProject/EditDescSkills";
 
 const useStyles = makeStyles((theme) => ({
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
-    color: '#fff',
+    color: "#fff",
   },
   root: {
-    display: 'block',
-    flexWrap: 'wrap',
-    '& > *': {
+    display: "block",
+    flexWrap: "wrap",
+    "& > *": {
       margin: theme.spacing(1),
       width: theme.spacing(100),
 
@@ -33,13 +32,13 @@ const useStyles = makeStyles((theme) => ({
     margin: 0,
   },
   span: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    alignItems: 'right',
+    display: "flex",
+    justifyContent: "flex-end",
+    alignItems: "right",
   },
   Typography: {
     subtitle1: {
-      fontweight: 'bold',
+      fontweight: "bold",
     },
   },
 }));

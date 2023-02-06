@@ -1,12 +1,12 @@
-import { Typography, Grid, Paper, Tab, Tabs } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core';
-import { useRouteMatch } from 'react-router-dom';
-import { useState } from 'react';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
-import SearchProjectsComp from '../../Components/SearchProject/SearchProject';
-import RecommendedProjects from '../../Components/SearchProject/RecommendedProjects';
-import ApplicationsS from '../../Components/SearchProject/Applications';
-import { useLocation } from 'react-router-dom';
+import { Typography, Grid, Paper, Tab, Tabs } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
+import { useRouteMatch } from "react-router-dom";
+import { useState } from "react";
+import { Switch, Route, Link } from "react-router-dom";
+import SearchProjectsComp from "../../Components/SearchProject/SearchProject";
+import RecommendedProjects from "../../Components/SearchProject/RecommendedProjects";
+import ApplicationsS from "../../Components/SearchProject/Applications";
+import { useLocation } from "react-router-dom";
 
 const useStyles = makeStyles({
   root: {
@@ -14,13 +14,11 @@ const useStyles = makeStyles({
     marginTop: 20,
   },
   active: {
-    borderBottom: '2px solid #FF6500',
+    borderBottom: "2px solid #FF6500",
     // borderRadius: '6px',
-    color: '#FF6500',
+    color: "#FF6500",
   },
   searchProject: {
-    font: 'Roboto',
-    fontFamily: 'Roboto',
     fontWeight: 400,
     fontSize: 22,
   },
@@ -29,15 +27,15 @@ const useStyles = makeStyles({
 export default function SearchProjects() {
   let { path, url } = useRouteMatch();
   const classes = useStyles();
-  const [value, setValue] = useState(0);
+  // const [value, setValue] = useState(0);
 
   const location = useLocation();
   const { pathname } = location;
-  const splitLocation = pathname.slice('/');
+  const splitLocation = pathname.slice("/");
 
-  const handleChange = (newValue) => {
-    setValue(newValue);
-  };
+  // const handleChange = (newValue) => {
+  //   setValue(newValue);
+  // };
   return (
     <>
       <Grid container direction="column">
@@ -50,40 +48,40 @@ export default function SearchProjects() {
         <Grid item>
           <Paper className={classes.root}>
             <Tabs
-              value={value}
-              onChange={handleChange}
-              indicatorColor="white"
+              value={false}
+              // onChange={handleChange}
+              // indicatorColor="white"
               centered
             >
               <Link
-                style={{ textDecoration: 'none', color: 'black' }}
+                style={{ textDecoration: "none", color: "black" }}
                 to={`${url}`}
                 className={`${
-                  splitLocation === '/search-projects/search'
+                  splitLocation === "/search-projects/search"
                     ? classes.active
-                    : ''
+                    : ""
                 }`}
               >
                 <Tab label="Search Projects" />
               </Link>
               <Link
-                style={{ textDecoration: 'none', color: 'black' }}
+                style={{ textDecoration: "none", color: "black" }}
                 to={`${url}/recommended`}
                 className={`${
-                  splitLocation === '/search-projects/search/recommended'
+                  splitLocation === "/search-projects/search/recommended"
                     ? classes.active
-                    : ''
+                    : ""
                 }`}
               >
                 <Tab label="Recommended Projects" />
               </Link>
               <Link
-                style={{ textDecoration: 'none', color: 'black' }}
+                style={{ textDecoration: "none", color: "black" }}
                 to={`${url}/applications`}
                 className={`${
-                  splitLocation === '/search-projects/search/applications'
+                  splitLocation === "/search-projects/search/applications"
                     ? classes.active
-                    : ''
+                    : ""
                 }`}
               >
                 <Tab label="Applications" />

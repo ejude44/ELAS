@@ -1,47 +1,41 @@
-import { Typography, Grid, Box, Container } from '@material-ui/core';
-import { useUserMemberships } from '../../api/user/hooks';
-import ProjectsCard from '../Cards/ProjectsCard/ProjectsCard';
-import { CircularProgress } from '@material-ui/core';
-import { useState, useEffect } from 'react';
-import ProjectDetail from '../Popup/ProjectDetail';
-import { useContext } from 'react';
-import { Link } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core';
-import UserContext from '../../Store/UserContext';
-import Checkbox from '@material-ui/core/Checkbox';
-import FormControl from '@material-ui/core/FormControl';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { Accordion } from '@material-ui/core/';
-import { AccordionSummary } from '@material-ui/core/';
-import { AccordionDetails } from '@material-ui/core/';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { Typography, Grid, Box, Container } from "@material-ui/core";
+import { useUserMemberships } from "../../api/user/hooks";
+import ProjectsCard from "../Cards/ProjectsCard/ProjectsCard";
+import { CircularProgress } from "@material-ui/core";
+import { useState, useEffect } from "react";
+import ProjectDetail from "../Popup/ProjectDetail";
+import { useContext } from "react";
+import { Link } from "react-router-dom";
+import { makeStyles } from "@material-ui/core";
+import UserContext from "../../Store/UserContext";
+import Checkbox from "@material-ui/core/Checkbox";
+import FormControl from "@material-ui/core/FormControl";
+import FormGroup from "@material-ui/core/FormGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import { Accordion } from "@material-ui/core/";
+import { AccordionSummary } from "@material-ui/core/";
+import { AccordionDetails } from "@material-ui/core/";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 const useStyles = makeStyles((theme) => ({
   projectsFound: {
-    font: 'Roboto',
-    fontFamily: 'Roboto',
-    fontWeight: 400,
     fontSize: 15,
-    lineHeight: 3,
   },
   added: {
-    font: 'Roboto',
-    fontFamily: 'Roboto',
     fontWeight: 400,
     fontSize: 15,
   },
   filter: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    alignItems: 'right',
+    display: "flex",
+    justifyContent: "flex-end",
+    alignItems: "right",
     marginTop: 10,
   },
-  box: {
-    display: 'flex',
-  },
+  // box: {
+  //   display: "flex",
+  // },
   root: {
-    width: '100%',
+    width: "100%",
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
@@ -59,16 +53,36 @@ export default function ApplicationsS() {
   const [loadedProjects, setLoadedProjects] = useState([]);
 
   const { projects } = useUserMemberships(userCtx.id);
-  const [filterProj, setFilterProj] = useState([]);
-  console.log(projects);
+  const [filterProj, setFilterProj] = useState(loadedProjects);
+  const [state, setState] = useState({
+    Pending: true,
+    Accepted: true,
+    Rejected: true,
+  });
 
   useEffect(() => {
     setIsApplications(true);
     if (projects !== undefined) {
       setLoadedProjects(projects);
       setCount(projects.length);
+
+      const data = projects.filter((item) => {
+        if (state.Pending && item.status === "pending") {
+          return true;
+        }
+        if (state.Accepted && item.status === "accepted") {
+          return true;
+        }
+        if (state.Rejected && item.status === "rejected") {
+          return true;
+        }
+
+        return false;
+      });
+      setFilterProj(data);
+      setCount(data.length);
     }
-  }, [count, projects, isApplications]);
+  }, [count, projects, isApplications, state]);
 
   const handleOpen = (id) => {
     setIsClicked(projects.find((x) => x.id === id));
@@ -80,45 +94,9 @@ export default function ApplicationsS() {
     setIsClicked([]);
   };
 
-  const [state, setState] = useState({
-    Pending: false,
-    Accepted: false,
-    Rejected: false,
-  });
-
-  const statuses = [
-    { status: 'accepted' },
-    { status: 'rejected' },
-    { status: 'pending' },
-  ];
-  const handleChange = (event) => {
-    // setState({ ...state, [event.target.name]: event.target.checked });
-    if (event.target.checked) {
-      setLoadedProjects([...loadedProjects, event.target.value]);
-    } else {
-      setLoadedProjects(
-        loadedProjects.filter((id) => id !== event.target.value)
-      );
-    }
+  const handleChange = (status) => {
+    setState({ ...state, [status]: !state[status] });
   };
-
-  useEffect(() => {
-    if (loadedProjects.length === 0) {
-      setFilterProj(
-        loadedProjects.filter((project) =>
-          projects.some((stat) => [project.status].flat().includes(stat))
-        )
-      );
-    } else if (projects !== undefined) {
-      setFilterProj(projects);
-      // setFilterProj(
-      //   loadedProjects.filter((project) =>
-      //     projects.some((stat) => [project.status].flat().includes(stat))
-      //   )
-      // );
-    }
-  }, [loadedProjects]);
-
   return (
     <>
       <Grid container direction="column">
@@ -151,29 +129,14 @@ export default function ApplicationsS() {
                   >
                     {/* <FormLabel component="legend">Filter Projects</FormLabel> */}
                     <FormGroup>
-                      {statuses.map((status) => (
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              // checked={state.Pending}
-                              size="small"
-                              onChange={handleChange}
-                              style={{ color: '#FF6500' }}
-                            />
-                          }
-                          // name="Pending"
-                          label={status.status}
-                          value={status.status}
-                        />
-                      ))}
-                      {/* <FormControlLabel
+                      <FormControlLabel
                         control={
                           <Checkbox
                             checked={state.Pending}
                             size="small"
-                            onChange={handleChange}
+                            onChange={() => handleChange("Pending")}
                             name="Pending"
-                            style={{ color: '#FF6500' }}
+                            style={{ color: "#FF6500" }}
                           />
                         }
                         label="Pending"
@@ -183,9 +146,9 @@ export default function ApplicationsS() {
                           <Checkbox
                             size="small"
                             checked={state.Accepted}
-                            onChange={handleChange}
+                            onChange={() => handleChange("Accepted")}
                             name="Accepted"
-                            style={{ color: '#FF6500' }}
+                            style={{ color: "#FF6500" }}
                           />
                         }
                         label="Accepted"
@@ -196,13 +159,13 @@ export default function ApplicationsS() {
                           <Checkbox
                             size="small"
                             checked={state.Rejected}
-                            onChange={handleChange}
+                            onChange={() => handleChange("Rejected")}
                             name="Rejected"
-                            style={{ color: '#FF6500' }}
+                            style={{ color: "#FF6500" }}
                           />
                         }
                         label="Rejected"
-                      /> */}
+                      />
                     </FormGroup>
                   </FormControl>
                 </AccordionDetails>
@@ -214,8 +177,7 @@ export default function ApplicationsS() {
         {loadedProjects ? (
           <Container style={{ marginTop: 30 }}>
             <Grid item>
-              <Typography className={classes.projectsFound}>
-                {' '}
+              <Typography className={classes.projectsFound} gutterBottom>
                 {count} project(s) found
               </Typography>
             </Grid>
@@ -233,7 +195,7 @@ export default function ApplicationsS() {
             </Grid>
           </Container>
         ) : (
-          <Box sx={{ display: 'flex' }}>
+          <Box sx={{ display: "flex" }}>
             <CircularProgress />
           </Box>
         )}

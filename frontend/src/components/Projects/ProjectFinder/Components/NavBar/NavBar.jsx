@@ -1,23 +1,20 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
-
-import ListItem from '@material-ui/core/ListItem';
-
-import ListItemText from '@material-ui/core/ListItemText';
-import { NavLink, Link, useParams } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
-import logo from './../../reuse/files/Proj.png';
+import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import Drawer from "@material-ui/core/Drawer";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import Toolbar from "@material-ui/core/Toolbar";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
+import { NavLink, Link, useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import logo from "./../../reuse/files/Proj.png";
 
 const drawerWidth = 170;
 
 const useStyles = makeStyles((theme) => ({
   roots: {
-    display: 'flex',
+    display: "flex",
     // zIndex: -1,
   },
   appBar: {
@@ -32,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 60,
   },
   drawerContainer: {
-    overflow: 'auto',
+    overflow: "auto",
   },
   content: {
     flexGrow: 1,
@@ -40,12 +37,12 @@ const useStyles = makeStyles((theme) => ({
   },
 
   link: {
-    textDecoration: 'none',
+    textDecoration: "none",
     color: theme.palette.text.primary,
   },
   active: {
-    color: '#000000',
-    backgroundColor: '#D9D9D9',
+    color: "#000000",
+    backgroundColor: "#D9D9D9",
   },
 }));
 
@@ -53,7 +50,7 @@ export default function NavBar(props) {
   const location = useLocation();
   const { id } = useParams();
   const { pathname } = location;
-  const splitLocation = pathname.slice('/');
+  const splitLocation = pathname.slice("/");
 
   const classes = useStyles();
 
@@ -83,47 +80,35 @@ export default function NavBar(props) {
         </Toolbar>
         <div className={classes.drawerContainer}>
           <List>
-            {/* <center>
-              <Link to="/project-finder">
-                <img
-                  src={logo}
-                  alt="logo"
-                  height="50"
-                  width="130"
-                  style={{ marginBottom: 10 }}
-                />
-              </Link>
-            </center> */}
-
             <NavLink to="/project-finder" className={classes.link}>
               <ListItem
                 button
                 className={`${
                   splitLocation === `/projects/${id}/details` ||
-                  '/project-finder'
+                  splitLocation === "/project-finder"
                     ? classes.active
-                    : ''
+                    : "  "
                 }`}
               >
-                <ListItemText primary={'Dashboard'} />
+                <ListItemText primary={"Dashboard"} />
               </ListItem>
             </NavLink>
 
             <Link
               to="/search-projects/search"
-              style={{ textDecoration: 'none', color: 'black' }}
+              style={{ textDecoration: "none", color: "black" }}
             >
               <ListItem
                 button
                 className={`${
-                  splitLocation === '/search-projects/search' ||
+                  splitLocation === "/search-projects/search" ||
                   splitLocation === `/search-projects/search/recommended` ||
                   splitLocation === `/search-projects/search/applications`
                     ? classes.active
-                    : ''
+                    : ""
                 }`}
               >
-                <ListItemText primary={'Search Projects'} />
+                <ListItemText primary={"Search Projects"} />
               </ListItem>
             </Link>
 
@@ -131,10 +116,10 @@ export default function NavBar(props) {
               <ListItem
                 button
                 className={`${
-                  splitLocation === '/profile' ? classes.active : ''
+                  splitLocation === "/profile" ? classes.active : " "
                 }`}
               >
-                <ListItemText primary={'My Profile'} />
+                <ListItemText primary={"My Profile"} />
               </ListItem>
             </NavLink>
           </List>

@@ -1,33 +1,22 @@
-from sqlalchemy import Column, String,Integer,ARRAY
+from sqlalchemy import Column, String,Integer
 from orm_interface.base import Base
 from sqlalchemy.orm import relationship
+from orm_interface.entities.project_finder.projectfinder import ProjectFinder_User
 
 class User(Base):
     __tablename__ = "user"
-    
     id = Column(Integer, primary_key=True, autoincrement=True)
     firstname = Column(String)
     lastname = Column(String)
-    email = Column(String)
+    email = Column(String, unique=True)
     password = Column(String)
-    profile_image= Column(String)
-    degree=Column(String)
-    description= Column(String)
-    birthday = Column(String)
-    skills = Column(ARRAY(String))
-    projectfinder_user= relationship('ProjectFinder_User', backref='user')
-    projects = relationship('Projects', backref='user')
-    membership = relationship('Membership', backref='user')
-    discussion = relationship('Discussion', backref='user')
+    projectfinder_user= relationship(ProjectFinder_User, overlaps="user")
+   
 
 
-    def __init__(self, firstname, lastname, email, password, degree,birthday,skills, description,profile_image):
+    def __init__(self, firstname, lastname, email, password ):
         self.firstname = firstname
         self.lastname = lastname
         self.email = email
         self.password = password
-        self.degree= degree
-        self.birthday= birthday
-        self.skills= skills
-        self.description= description
-        self.profile_image= profile_image
+       

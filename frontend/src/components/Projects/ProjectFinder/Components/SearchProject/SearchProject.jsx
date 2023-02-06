@@ -42,7 +42,7 @@ export default function SearchProjectsComp() {
     if (filteredProjects !== undefined) {
       setCount(filteredProjects.length);
     }
-  }, [projects, count, loadedProjects, setCount]);
+  }, [projects, count, loadedProjects, setCount, filteredProjects]);
 
   const handleSearch = (event) => {
     let value = event.target.value;

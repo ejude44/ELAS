@@ -1,37 +1,20 @@
-import {
-  Typography,
-  Grid,
-  Paper,
-  Tab,
-  Tabs,
-  Box,
-  Button,
-} from '@material-ui/core';
-import { makeStyles } from '@material-ui/core';
-import { useRouteMatch } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  NavLink,
-  useParams,
-} from 'react-router-dom';
-
-import ProjectDetails from '../../Components/ProjectDetail/ProjectDetails';
-import ProjectApplications from '../../Components/ProjectDetail/ProjectApplications';
-import { useProjectMembers } from '../../api/user/hooks';
-import { useContext } from 'react';
-import AuthContext from '../../Store/AuthContext';
-import { useMyMembershipStatus, useProject } from '../../api/project/hooks';
-import { useEditProject } from '../../api/project/hooks';
-import ConfirmDelete from '../../Components/Popup/EditProject/ConfirmDelete';
-import { useHistory } from 'react-router-dom';
-import { useDeleteProject } from '../../api/project/hooks';
-import { useLocation } from 'react-router-dom';
-import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert from '@material-ui/lab/Alert';
+import { Grid, Paper, Tab, Tabs, Button } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
+import { useRouteMatch } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Switch, Route, Link, useParams } from "react-router-dom";
+import ProjectDetails from "../../Components/ProjectDetail/ProjectDetails";
+import ProjectApplications from "../../Components/ProjectDetail/ProjectApplications";
+import { useContext } from "react";
+import AuthContext from "../../Store/AuthContext";
+import { useMyMembershipStatus, useProject } from "../../api/project/hooks";
+import { useEditProject } from "../../api/project/hooks";
+import ConfirmDelete from "../../Components/Popup/EditProject/ConfirmDelete";
+import { useHistory } from "react-router-dom";
+import { useDeleteProject } from "../../api/project/hooks";
+import { useLocation } from "react-router-dom";
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -46,30 +29,30 @@ const useStyles = makeStyles({
     marginRight: 30,
   },
   nav: {
-    listStyle: 'None',
-    display: 'flex',
+    listStyle: "None",
+    display: "flex",
   },
   li: {
     padding: 5,
-    textDecoration: 'none',
+    textDecoration: "none",
     fontSize: 15,
     fontWeight: 400,
   },
   deleteProject: {
-    display: 'flex',
-    alignItems: 'flex-end',
-    justifyContent: 'right',
+    display: "flex",
+    alignItems: "flex-end",
+    justifyContent: "right",
   },
   active: {
-    borderBottom: '2px solid #FF6500',
+    borderBottom: "2px solid #FF6500",
     // borderRadius: '6px',
-    color: '#FF6500',
+    color: "#FF6500",
   },
   sup: {
-    verticalAlign: 'super',
-    fontSize: 'medium',
-    color: 'white',
-    backgroundColor: '#FF6500',
+    verticalAlign: "super",
+    fontSize: 15,
+    color: "white",
+    backgroundColor: "#FF6500",
     borderRadius: 400 / 2,
     marginLeft: -20,
     padding: 4,
@@ -79,42 +62,42 @@ const useStyles = makeStyles({
 export default function SearchProjects() {
   let { path, url } = useRouteMatch();
   const classes = useStyles();
-  const [values, setValues] = useState(0);
+  // const [values, setValues] = useState(0);
   const { id } = useParams();
-  // const { members } = useProjectMembers(id);
+
   const [appMem, setAppMem] = useState();
-  const { MEM, refetch } = useMyMembershipStatus(id, null);
+  const { MEM } = useMyMembershipStatus(id, null);
 
   const history = useHistory();
   const [confirmDelete, setConfirmDelete] = useState(false);
   const { deleteProject } = useDeleteProject();
   const location = useLocation();
   const { pathname } = location;
-  const splitLocation = pathname.slice('/');
+  const splitLocation = pathname.slice("/");
 
   const authCtx = useContext(AuthContext);
 
   const { project, getProj } = useProject(id);
   const [loadedProject, setLoadedProject] = useState(project);
   const [value, setValue] = useState({
-    'title': '',
-    'faculty': '',
-    'degree': '',
-    'maxMembers': '',
-    'description': '',
-    'skills': '',
+    title: "",
+    faculty: "",
+    degree: "",
+    maxMembers: "",
+    description: "",
+    skills: "",
   });
 
   const [open, setOpen] = useState({
-    'title': false,
-    'details': false,
-    'descSkills': false,
+    title: false,
+    details: false,
+    descSkills: false,
   });
 
   const [opens, setOpens] = useState(false);
 
   const handleCloses = (event, reason) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
 
@@ -128,15 +111,15 @@ export default function SearchProjects() {
   };
 
   const handleOnEditTitleClick = () => {
-    setOpen({ 'title': true });
+    setOpen({ title: true });
   };
 
   const handleOnEditDetailsClick = () => {
-    setOpen({ 'details': true });
+    setOpen({ details: true });
   };
 
   const handleOnEditDescSkillsClick = () => {
-    setOpen({ 'descSkills': true });
+    setOpen({ descSkills: true });
   };
   const handleSave = async () => {
     await editProject(id, value, authCtx.token);
@@ -145,9 +128,9 @@ export default function SearchProjects() {
     await getProj();
   };
 
-  const handleChange = (event, newValues) => {
-    setValues(newValues);
-  };
+  // const handleChange = (event, newValues) => {
+  //   setValues(newValues);
+  // };
 
   const handleDeleteProject = () => {
     setConfirmDelete(true);
@@ -159,7 +142,7 @@ export default function SearchProjects() {
 
   const handleYes = async () => {
     await deleteProject(id);
-    history.push('/project-finder');
+    history.push("/project-finder");
     setConfirmDelete(false);
   };
 
@@ -168,19 +151,20 @@ export default function SearchProjects() {
       project.map((det) => {
         setValue({
           ...value,
-          'title': det.title,
-          'description': det.description,
-          'maxMembers': det.max_members,
-          'faculty': det.faculty,
-          'skills': det.skills,
-          'degree': det.degree,
+          title: det.title,
+          description: det.description,
+          maxMembers: det.max_members,
+          faculty: det.faculty,
+          skills: det.skills,
+          degree: det.degree,
         });
+        return "";
       });
       setLoadedProject(project);
     }
     if (MEM !== undefined) {
       const appmem = MEM.filter(
-        (mem) => mem.status === 'pending' && mem.project_id == id
+        (mem) => mem.status === "pending" && mem.project_id == id
       );
 
       setAppMem(appmem);
@@ -214,7 +198,7 @@ export default function SearchProjects() {
               size="small"
               variant="contained"
               onClick={handleDeleteProject}
-              style={{ backgroundColor: 'red', color: 'white' }}
+              style={{ backgroundColor: "red", color: "white" }}
             >
               Delete Project
             </Button>
@@ -223,34 +207,34 @@ export default function SearchProjects() {
 
         <Paper className={classes.root}>
           <Tabs
-            value={values}
-            onChange={handleChange}
-            indicatorColor="white"
+            value={false}
+            // onChange={handleChange}
+            // indicatorColor="white"
             centered
           >
             <Link
-              style={{ textDecoration: 'none', color: 'black' }}
+              style={{ textDecoration: "none", color: "black" }}
               to={`${url}/details`}
               className={`${
                 splitLocation === `/projects/${id}/details`
                   ? classes.active
-                  : ''
+                  : ""
               }`}
             >
               <Tab label="Project Details" />
             </Link>
 
             <Link
-              style={{ textDecoration: 'none', color: 'black' }}
+              style={{ textDecoration: "none", color: "black" }}
               to={`${url}/applications`}
               className={`${
                 splitLocation === `/projects/${id}/applications`
                   ? classes.active
-                  : ''
+                  : ""
               }`}
             >
               <Tab label="applications" />
-              <span className={classes.sup}>{appMem ? appMem.length : ''}</span>
+              <span className={classes.sup}>{appMem ? appMem.length : ""}</span>
             </Link>
           </Tabs>
         </Paper>
