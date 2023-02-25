@@ -1,4 +1,4 @@
-import { Grid, Paper, Tab, Tabs, Button } from "@material-ui/core";
+import { Grid, Paper, Typography, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core";
 import { useRouteMatch } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -45,7 +45,6 @@ const useStyles = makeStyles({
   },
   active: {
     borderBottom: "2px solid #FF6500",
-    // borderRadius: '6px',
     color: "#FF6500",
   },
   sup: {
@@ -54,29 +53,30 @@ const useStyles = makeStyles({
     color: "white",
     backgroundColor: "#FF6500",
     borderRadius: 400 / 2,
-    marginLeft: -20,
     padding: 4,
+  },
+  navItems: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: 50,
   },
 });
 
 export default function SearchProjects() {
   let { path, url } = useRouteMatch();
   const classes = useStyles();
-  // const [values, setValues] = useState(0);
   const { id } = useParams();
-
   const [appMem, setAppMem] = useState();
   const { MEM } = useMyMembershipStatus(id, null);
-
   const history = useHistory();
   const [confirmDelete, setConfirmDelete] = useState(false);
   const { deleteProject } = useDeleteProject();
   const location = useLocation();
   const { pathname } = location;
   const splitLocation = pathname.slice("/");
-
+  const [status, setStatus] = useState();
   const authCtx = useContext(AuthContext);
-
   const { project, getProj } = useProject(id);
   const [loadedProject, setLoadedProject] = useState(project);
   const [value, setValue] = useState({
@@ -105,32 +105,32 @@ export default function SearchProjects() {
   };
 
   const { editProject } = useEditProject();
-
   const handleClose = () => {
     setOpen(false);
   };
-
   const handleOnEditTitleClick = () => {
     setOpen({ title: true });
   };
-
   const handleOnEditDetailsClick = () => {
     setOpen({ details: true });
   };
-
   const handleOnEditDescSkillsClick = () => {
     setOpen({ descSkills: true });
   };
+
   const handleSave = async () => {
-    await editProject(id, value, authCtx.token);
-    setOpen(false);
-    setOpens(true);
+    const save = await editProject(id, value, authCtx.token);
+    if (save.success) {
+      setOpen(false);
+      setOpens(true);
+      setStatus(save.data.sucess);
+    } else {
+      setOpen(false);
+      setOpens(true);
+      setStatus(save.status);
+    }
     await getProj();
   };
-
-  // const handleChange = (event, newValues) => {
-  //   setValues(newValues);
-  // };
 
   const handleDeleteProject = () => {
     setConfirmDelete(true);
@@ -141,9 +141,13 @@ export default function SearchProjects() {
   };
 
   const handleYes = async () => {
-    await deleteProject(id);
-    history.push("/project-finder");
-    setConfirmDelete(false);
+    const yes = await deleteProject(id);
+    if (yes.success) {
+      history.push("/project-finder");
+      setConfirmDelete(false);
+    } else {
+      return;
+    }
   };
 
   useEffect(() => {
@@ -164,6 +168,7 @@ export default function SearchProjects() {
     }
     if (MEM !== undefined) {
       const appmem = MEM.filter(
+        // eslint-disable-next-line eqeqeq
         (mem) => mem.status === "pending" && mem.project_id == id
       );
 
@@ -206,14 +211,9 @@ export default function SearchProjects() {
         </Grid>
 
         <Paper className={classes.root}>
-          <Tabs
-            value={false}
-            // onChange={handleChange}
-            // indicatorColor="white"
-            centered
-          >
+          <Grid item className={classes.navItems}>
             <Link
-              style={{ textDecoration: "none", color: "black" }}
+              style={{ textDecoration: "none", color: "black", margin: 20 }}
               to={`${url}/details`}
               className={`${
                 splitLocation === `/projects/${id}/details`
@@ -221,11 +221,13 @@ export default function SearchProjects() {
                   : ""
               }`}
             >
-              <Tab label="Project Details" />
+              <Typography>
+                <b>Project Details</b>
+              </Typography>
             </Link>
 
             <Link
-              style={{ textDecoration: "none", color: "black" }}
+              style={{ textDecoration: "none", color: "black", margin: 20 }}
               to={`${url}/applications`}
               className={`${
                 splitLocation === `/projects/${id}/applications`
@@ -233,10 +235,14 @@ export default function SearchProjects() {
                   : ""
               }`}
             >
-              <Tab label="applications" />
-              <span className={classes.sup}>{appMem ? appMem.length : ""}</span>
+              <Typography>
+                <b> Applications</b>
+                <span className={classes.sup}>
+                  {appMem ? appMem.length : ""}
+                </span>
+              </Typography>
             </Link>
-          </Tabs>
+          </Grid>
         </Paper>
         <Switch>
           <Route path={`${path}/details`}>
@@ -258,7 +264,7 @@ export default function SearchProjects() {
         </Switch>
         <Snackbar open={opens} autoHideDuration={3000} onClose={handleCloses}>
           <Alert onClose={handleCloses} severity="success">
-            Changes saved!
+            {status}
           </Alert>
         </Snackbar>
       </Grid>

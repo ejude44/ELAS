@@ -1,23 +1,23 @@
-import { Typography, Grid, TextField } from '@material-ui/core';
-import { Faculties, Degrees, maxMembers } from '../../reuse/reuse';
-import { MenuItem } from '@material-ui/core';
+import { Grid, TextField } from "@material-ui/core";
+import { Faculties, Degrees, maxMembers } from "../../reuse/reuse";
+import { MenuItem } from "@material-ui/core";
 
 export default function TitleAndDetails({ props }) {
   const { value, setValue } = props;
   const onChange = (event) => {
-    setValue({ ...value, 'title': event.target.value });
+    setValue({ ...value, title: event.target.value });
   };
 
   const onChangeFac = (event) => {
-    setValue({ ...value, 'faculty': event.target.value });
+    setValue({ ...value, faculty: event.target.value });
   };
 
   const onChangeDeg = (event) => {
-    setValue({ ...value, 'degree': event.target.value });
+    setValue({ ...value, degree: event.target.value });
   };
 
   const onChangeMaxMem = (event) => {
-    setValue({ ...value, 'maxMembers': event.target.value });
+    setValue({ ...value, maxMembers: event.target.value });
   };
 
   return (

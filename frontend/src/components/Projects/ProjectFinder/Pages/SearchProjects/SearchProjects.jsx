@@ -1,7 +1,6 @@
-import { Typography, Grid, Paper, Tab, Tabs } from "@material-ui/core";
+import { Typography, Grid, Paper } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core";
 import { useRouteMatch } from "react-router-dom";
-import { useState } from "react";
 import { Switch, Route, Link } from "react-router-dom";
 import SearchProjectsComp from "../../Components/SearchProject/SearchProject";
 import RecommendedProjects from "../../Components/SearchProject/RecommendedProjects";
@@ -22,20 +21,20 @@ const useStyles = makeStyles({
     fontWeight: 400,
     fontSize: 22,
   },
+  navItems: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: 50,
+  },
 });
 
 export default function SearchProjects() {
   let { path, url } = useRouteMatch();
   const classes = useStyles();
-  // const [value, setValue] = useState(0);
-
   const location = useLocation();
   const { pathname } = location;
   const splitLocation = pathname.slice("/");
-
-  // const handleChange = (newValue) => {
-  //   setValue(newValue);
-  // };
   return (
     <>
       <Grid container direction="column">
@@ -47,14 +46,9 @@ export default function SearchProjects() {
 
         <Grid item>
           <Paper className={classes.root}>
-            <Tabs
-              value={false}
-              // onChange={handleChange}
-              // indicatorColor="white"
-              centered
-            >
+            <Grid item className={classes.navItems}>
               <Link
-                style={{ textDecoration: "none", color: "black" }}
+                style={{ textDecoration: "none", color: "black", margin: 30 }}
                 to={`${url}`}
                 className={`${
                   splitLocation === "/search-projects/search"
@@ -62,10 +56,12 @@ export default function SearchProjects() {
                     : ""
                 }`}
               >
-                <Tab label="Search Projects" />
+                <Typography>
+                  <b>Search Projects</b>
+                </Typography>
               </Link>
               <Link
-                style={{ textDecoration: "none", color: "black" }}
+                style={{ textDecoration: "none", color: "black", margin: 30 }}
                 to={`${url}/recommended`}
                 className={`${
                   splitLocation === "/search-projects/search/recommended"
@@ -73,10 +69,12 @@ export default function SearchProjects() {
                     : ""
                 }`}
               >
-                <Tab label="Recommended Projects" />
+                <Typography>
+                  <b>Recommendations</b>
+                </Typography>
               </Link>
               <Link
-                style={{ textDecoration: "none", color: "black" }}
+                style={{ textDecoration: "none", color: "black", margin: 30 }}
                 to={`${url}/applications`}
                 className={`${
                   splitLocation === "/search-projects/search/applications"
@@ -84,9 +82,11 @@ export default function SearchProjects() {
                     : ""
                 }`}
               >
-                <Tab label="Applications" />
+                <Typography>
+                  <b>Applications</b>
+                </Typography>
               </Link>
-            </Tabs>
+            </Grid>
           </Paper>
           <Switch>
             <Route path={`${path}/recommended`}>

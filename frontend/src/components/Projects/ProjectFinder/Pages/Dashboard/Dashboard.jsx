@@ -1,4 +1,4 @@
-import { Typography, Grid, Box, Button, Container } from "@material-ui/core";
+import { Typography, Grid, Button, Container } from "@material-ui/core";
 import { CircularProgress } from "@material-ui/core";
 import { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
@@ -26,10 +26,8 @@ const useStyles = makeStyles((theme) => ({
   dashboard: {
     fontWeight: 400,
     fontSize: 20,
-
     lineHeight: 2,
   },
-
   formControl: {
     margin: theme.spacing(0),
   },
@@ -45,12 +43,11 @@ export default function Dashboard() {
   const [loadedUserProjects, setLoadedUserProjects] = useState("");
   const [loadedUserOtherProjects, setLoadedUserOtherProjects] = useState("");
   const [isClicked, setIsClicked] = useState();
-  const [loadedProjects, setLoadedProjects] = useState("");
   const { projects, getLoggedInUserProjects } = useGetLoggedInUserProjects(
     userCtx.id,
     authCtx.token
   );
-  const { otherProjects } = useGetLoggedInUserOtherProjects(
+  const { otherProjects, } = useGetLoggedInUserOtherProjects(
     userCtx.id,
     authCtx.token
   );
@@ -70,10 +67,14 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
-    if (projects !== undefined && otherProjects !== undefined) {
+    if (
+      projects !== undefined &&
+      otherProjects !== undefined &&
+      otherProjects !== null &&
+      projects !== null
+    ) {
       setLoadedUserProjects(projects);
       setLoadedUserOtherProjects(otherProjects);
-
       const data = projects.concat(otherProjects).filter((item) => {
         if (state.My && item.user_id) {
           return true;
@@ -83,12 +84,9 @@ export default function Dashboard() {
         }
         return false;
       });
-
       setFilteredPro(data);
     }
-
     filteredPro.length >= 1 ? setNotFound(false) : setNotFound(true);
-
     userCtx.toComplete ? setOpen(true) : setOpen(false);
   }, [
     notFound,
@@ -115,7 +113,6 @@ export default function Dashboard() {
 
   const handleYes = () => {
     setOpen(false);
-
     history.push("/profile");
   };
 
@@ -187,7 +184,7 @@ export default function Dashboard() {
       <Grid item>
         {filteredPro ? (
           <Container>
-            <Grid container spacing={2}>
+            <Grid container spacing={3}>
               {filteredPro.map((filteredProject, index) => (
                 <Grid item key={index} xs={12} md={4} sm={4}>
                   <MyProjects

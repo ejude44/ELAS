@@ -32,14 +32,12 @@ const useStyles = makeStyles((theme) => ({
   profileDescription: {
     fontWeight: 700,
     fontSize: 22,
-
-   
   },
 }));
 
 export default function AboutMe({ props }) {
   const classes = useStyles();
-  const { setValue, value, handleSave, status, setStatus } = props;
+  const { setValue, value, handleSave, status, setStatus, desc } = props;
   const [hideButton, setHideButton] = useState(true);
 
   const onChange = (event) => {
@@ -47,20 +45,18 @@ export default function AboutMe({ props }) {
     setHideButton(false);
     setStatus("save");
   };
-  const onKeyDown = (event) => {
-    if (event.key === "Enter" || event.key === "Escape") {
-      event.target.blur();
-    }
+
+  const handleCancel = () => {
+    setValue({ ...value, about: desc });
+    setHideButton(true);
   };
 
   const onBlur = (event) => {
     if (event.target.value.trim() === "") {
       return;
-      // setValue(value.about);
     } else {
       setValue({ ...value, about: event.target.value });
     }
-    // setHideButton(true)
   };
 
   return (
@@ -94,18 +90,30 @@ export default function AboutMe({ props }) {
 
             <Box className={classes.saveAbout}>
               {!hideButton ? (
-                <Button
-                  size="small"
-                  onClick={handleSave}
-                  variant="contained"
-                  color="primary"
-                  style={{
-                    backgroundColor: "#FF6500",
-                    color: "white",
-                  }}
-                >
-                  <SaveOutlinedIcon fontSize="small" /> {status}
-                </Button>
+                <>
+                  <Button
+                    size="small"
+                    onClick={handleCancel}
+                    variant="outlined"
+                    style={{
+                      marginRight: 10,
+                    }}
+                  >
+                    {status === "saved" ? "Hide" : "Cancel"}
+                  </Button>
+                  <Button
+                    size="small"
+                    onClick={handleSave}
+                    variant="contained"
+                    color="primary"
+                    style={{
+                      backgroundColor: "#FF6500",
+                      color: "white",
+                    }}
+                  >
+                    <SaveOutlinedIcon fontSize="small" /> {status}
+                  </Button>
+                </>
               ) : (
                 ""
               )}

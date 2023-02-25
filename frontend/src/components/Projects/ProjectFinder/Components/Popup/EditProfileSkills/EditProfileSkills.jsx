@@ -5,8 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import SaveOutlinedIcon from "@material-ui/icons/SaveOutlined";
 import { TextField } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
-import { skills } from "../../../reuse/reuse";
-
+import { skills, langauges } from "../../../reuse/reuse";
 const useStyles = makeStyles((theme) => ({
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
@@ -23,59 +22,26 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function EditDescSkills(props) {
-  const { handleSave, open, handleClose, value, setValue } = props;
-
-  const handleOnChangeDescription = (event) => {
-    setValue({
-      ...value,
-      description: event.target.value,
-    });
-  };
-
-  const handleOnChangeSkills = (event, skills) => {
-    setValue({
-      ...value,
-      skills: skills,
-    });
-  };
+export default function EditProfileSkills(props) {
+  const { handleSave, open, handleClose, onChange, onLanguageSkillsChange } =
+    props;
 
   const classes = useStyles();
 
   return (
     <Grid container direction="column">
       <div>
-        <Backdrop
-          className={classes.backdrop}
-          open={open.descSkills ? true : false}
-        >
+        <Backdrop className={classes.backdrop} open={open}>
           <Paper className={classes.root}>
             <div style={{ padding: 10 }}>
               <Typography variant="h5" gutterBottom>
-                Edit Description and Skills
+                Edit Profile Skills
               </Typography>
-
-              <Grid item>
-                <TextField
-                  id="outlined-multiline-static"
-                  label="Description"
-                  multiline
-                  fullWidth
-                  value={value.description}
-                  rows={10}
-                  variant="outlined"
-                  onChange={handleOnChangeDescription}
-                  // onChange={descriptionChangeHandler}
-                  //   error={userInput.enteredDescriptionError.error}
-                  //   helperText={userInput.enteredDescriptionError.message}
-                />
-              </Grid>
-              <br></br>
 
               <Grid item>
                 <Autocomplete
                   multiple
-                  onChange={handleOnChangeSkills}
+                  onChange={onChange}
                   // onBlur={onBlur}
                   id="tags-standard"
                   options={skills}
@@ -87,8 +53,31 @@ export default function EditDescSkills(props) {
                     <TextField
                       {...params}
                       variant="standard"
-                      label="edit  Skills"
+                      label="search for Skills"
                       placeholder="Add Skills"
+                      className={classes.skillsBox}
+                    />
+                  )}
+                />
+              </Grid>
+
+              <Grid item>
+                <Autocomplete
+                  multiple
+                  onChange={onLanguageSkillsChange}
+                  // onBlur={onBlur}
+                  id="tags-standard"
+                  options={langauges}
+                  size="small"
+                  freeSolo
+                  getOptionLabel={(option) => option}
+                  defaultValue={[langauges[2]]}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant="standard"
+                      label="search for Langauges"
+                      placeholder="Add language Skills"
                       className={classes.skillsBox}
                     />
                   )}
@@ -96,10 +85,11 @@ export default function EditDescSkills(props) {
               </Grid>
             </div>
             <Box textAlign="right" padding={2}>
-              <Button variant="outlined" onClick={handleClose}>
+              <Button variant="outlined" size="small" onClick={handleClose}>
                 Cancel
               </Button>
               <Button
+                size="small"
                 variant="contained"
                 onClick={handleSave}
                 style={{

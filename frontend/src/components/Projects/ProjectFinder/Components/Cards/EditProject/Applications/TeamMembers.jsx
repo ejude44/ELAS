@@ -24,7 +24,6 @@ const useStyles = makeStyles((theme) => ({
   member: {
     lineHeight: 3,
   },
-
   orange: {
     color: theme.palette.getContrastText(deepOrange[500]),
     backgroundColor: deepOrange[500],
@@ -33,11 +32,10 @@ const useStyles = makeStyles((theme) => ({
 
 export default function TeamMembers(props) {
   const classes = useStyles();
-  const { teamMember, setOpen, handleReject, SETID, setIsClicked } = props;
+  const { teamMember, setOpen, handleReject, setID, setIsClicked } = props;
 
   const handleProfile = (g) => {
-    SETID(g);
-
+    setID(g);
     setIsClicked(teamMember.find((x) => x.id === g));
   };
 

@@ -1,34 +1,30 @@
-from sqlalchemy import Boolean, Column, Integer, String, ForeignKey,DATETIME,DateTime,ARRAY
+from sqlalchemy import Column, Integer, String, ForeignKey,DateTime,ARRAY
 from orm_interface.base import Base
 from sqlalchemy.orm import relationship
 
 class ProjectFinder_User(Base):
     __tablename__ = "projectfinder_user"
-    id = Column(Integer,  autoincrement=True ,primary_key= True)
+    id = Column(Integer,  autoincrement=True ,primary_key= True,unique=True)
     email = Column(String, ForeignKey('user.email'), unique=True)
     profile_image= Column(String)
     degree=Column(String)
     description= Column(String)
     birthday = Column(String)
     skills = Column(ARRAY(String))
+    languageSkills = Column(ARRAY(String))
     user = relationship('User', backref='user')
     projects = relationship('Projects', backref='user')
     membership = relationship('Membership', backref='user')
     discussion = relationship('Discussion', backref='user')
 
-    
-
-    def __init__(self, email,degree,birthday,skills, description,profile_image):
-       
-     
+    def __init__(self, email,degree,birthday,skills,languageSkills, description,profile_image):
         self.email= email
         self.degree= degree
         self.birthday= birthday
+        self.languageSkills= languageSkills
         self.skills= skills
         self.description= description
         self.profile_image= profile_image
-
-  
 
 class Projects(Base):
     __tablename__ = "projects"
@@ -38,14 +34,12 @@ class Projects(Base):
     description= Column(String)
     degree= Column(String)
     max_members= Column(Integer)
-    status = Column(String)
     link = Column(String)
     skills = Column(ARRAY(String))
     type = Column(String)
     user_id = Column(Integer, ForeignKey('projectfinder_user.id'))
     membership = relationship('Membership', backref='projects',cascade="all, delete", passive_deletes=True)
     discussion = relationship('Discussion', backref='projects',cascade="all, delete", passive_deletes=True)
-
 
     def __init__(self, title, faculty, description, degree, status,max_members,user_id, link, skills, type):
         self.title = title
@@ -58,6 +52,7 @@ class Projects(Base):
         self.link = link
         self.skills = skills
         self.type = type
+
 
 class Membership(Base):
     __tablename__ = "membership"
@@ -76,7 +71,7 @@ class Discussion(Base):
     __tablename__ = "discussion"
     id = Column(Integer, primary_key=True, autoincrement=True, unique=True)
     project_id = Column(Integer, ForeignKey('projects.id', ondelete='CASCADE'),primary_key = True)
-    user_id = Column(Integer, ForeignKey('projectfinder_user.id'), primary_key=True)
+    user_id = Column(Integer, ForeignKey('projectfinder_user.id'),primary_key=True)
     created_at = Column(DateTime)
     description = Column(String)
     children = Column(String)
@@ -87,7 +82,5 @@ class Discussion(Base):
         self.created_at = created_at
         self.description = description
         self.children = children
-
-
 
     

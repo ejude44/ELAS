@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useGetLoggedInUser } from "../api/user/hooks";
 
+
+ /**Context-api for Currently logged-in user */
+ 
 const UserContext = React.createContext({
   id: "",
   firstName: "",
   lastName: "",
   degree: "",
   skills: "",
+  languageSkills: "",
   description: "",
   foto: "",
   getLoggedInUser: "",
@@ -21,6 +25,7 @@ export const UserContextProvider = (props) => {
     degree: "",
     skills: "",
     description: "",
+    languageSkills: "",
     foto: "",
   });
   const { user, getLoggedInUser } = useGetLoggedInUser(token);
@@ -36,6 +41,7 @@ export const UserContextProvider = (props) => {
           lastName: details.lastname,
           degree: details.degree,
           skills: details.skills,
+          languageSkills: details.languageSkills,
           description: details.description,
           foto: details.profile_image,
         });
@@ -47,7 +53,8 @@ export const UserContextProvider = (props) => {
         if (
           details.degree === "" ||
           details.skills === [] ||
-          details.description === ""
+          details.description === "" ||
+          details.languageSkills === []
         ) {
           setToComplete(true);
         } else {
@@ -56,12 +63,13 @@ export const UserContextProvider = (props) => {
         return " ";
       });
     }
-
-    console.log(user);
   }, [user, toComplete]);
+
+
 
   const contextValue = {
     id: loadedUser.id,
+    languageSkills: loadedUser.languageSkills,
     firstName: loadedUser.firstName,
     lastName: loadedUser.lastName,
     degree: loadedUser.degree,

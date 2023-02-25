@@ -1,22 +1,21 @@
-import React from 'react';
-import Backdrop from '@material-ui/core/Backdrop';
-import { Box, Button, Grid, Paper, Typography } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import { useState } from 'react';
-import SaveOutlinedIcon from '@material-ui/icons/SaveOutlined';
-import { TextField } from '@material-ui/core';
-import { Faculties, Degrees, maxMembers } from '../../../reuse/reuse';
-import { MenuItem } from '@material-ui/core';
+import React from "react";
+import Backdrop from "@material-ui/core/Backdrop";
+import { Box, Button, Grid, Paper, Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import SaveOutlinedIcon from "@material-ui/icons/SaveOutlined";
+import { TextField } from "@material-ui/core";
+import { Faculties, Degrees, maxMembers } from "../../../reuse/reuse";
+import { MenuItem } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
-    color: '#fff',
+    color: "#fff",
   },
   root: {
-    display: 'block',
-    flexWrap: 'wrap',
-    '& > *': {
+    display: "block",
+    flexWrap: "wrap",
+    "& > *": {
       margin: theme.spacing(1),
       width: theme.spacing(50),
       //   height: theme.spacing(10),
@@ -27,26 +26,24 @@ const useStyles = makeStyles((theme) => ({
 export default function EditDetails(props) {
   const { handleSave, open, handleClose, value, setValue } = props;
 
-  useState(() => {}, [open]);
-
   const handleOnChangeFac = (event) => {
     setValue({
       ...value,
-      'faculty': event.target.value,
+      faculty: event.target.value,
     });
   };
 
   const handleOnChangeDeg = (event) => {
     setValue({
       ...value,
-      'degree': event.target.value,
+      degree: event.target.value,
     });
   };
 
   const handleOnChangeMax = (event) => {
     setValue({
       ...value,
-      'maxMembers': event.target.value,
+      maxMembers: event.target.value,
     });
   };
 
@@ -55,18 +52,22 @@ export default function EditDetails(props) {
   return (
     <Grid container direction="column">
       <div>
-        <Backdrop className={classes.backdrop} open={open.details}>
+        <Backdrop
+          className={classes.backdrop}
+          open={open.details ? true : false}
+        >
           <Paper className={classes.root}>
             <div style={{ padding: 10 }}>
-              <Typography variant="h5" gutterBottom>Edit Project Details</Typography>
+              <Typography variant="h5" gutterBottom>
+                Edit Project Details
+              </Typography>
 
-              <Grid item >
+              <Grid item>
                 <TextField
                   id="outlined-select-faculty"
                   select
                   label="Select"
                   fullWidth
-                  
                   value={value.faculty}
                   onChange={handleOnChangeFac}
                   //   error={userInput.enteredFacultyError.error}
@@ -87,7 +88,6 @@ export default function EditDetails(props) {
                   label="Select"
                   helperText="select Degree"
                   fullWidth
-                  
                   onChange={handleOnChangeDeg}
                   value={value.degree}
 
@@ -107,7 +107,6 @@ export default function EditDetails(props) {
                   id="outlined-select-max_members"
                   select
                   fullWidth
-                  
                   // label="Select"
                   value={value.maxMembers}
                   onChange={handleOnChangeMax}
@@ -131,11 +130,11 @@ export default function EditDetails(props) {
                 onClick={handleSave}
                 style={{
                   marginLeft: 10,
-                  backgroundColor: '#FF6500',
-                  color: 'white',
+                  backgroundColor: "#FF6500",
+                  color: "white",
                 }}
               >
-                <SaveOutlinedIcon fontSize='small' /> Save
+                <SaveOutlinedIcon fontSize="small" /> Save
               </Button>
             </Box>
           </Paper>

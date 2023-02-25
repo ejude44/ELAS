@@ -1,12 +1,6 @@
-import { Avatar } from '@material-ui/core';
-import {
-  deepOrange,
-  deepPurple,
-  blue,
-  blueGrey,
-  green,
-} from '@material-ui/core/colors';
-import { makeStyles } from '@material-ui/core';
+import { Avatar } from "@material-ui/core";
+import { deepOrange, deepPurple, blue, green } from "@material-ui/core/colors";
+import { makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   orange: {
@@ -36,7 +30,7 @@ export default function AvatarMyProject({ filteredMembers }) {
         {filteredMembers
           ? Array.from(filteredMembers.firstname)[0].toUpperCase() +
             Array.from(filteredMembers.lastname)[0].toUpperCase()
-          : ''}
+          : ""}
       </Avatar>
     </>
   );

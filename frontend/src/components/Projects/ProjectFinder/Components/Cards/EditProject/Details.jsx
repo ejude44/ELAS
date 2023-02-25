@@ -1,40 +1,30 @@
-import { Grid, Typography, makeStyles, Box } from '@material-ui/core';
-import { Paper } from '@material-ui/core';
-import { useState } from 'react';
-import { Button } from '@material-ui/core';
-import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
-import { Tooltip } from '@material-ui/core';
+import { Grid, Typography, makeStyles } from "@material-ui/core";
+import { Paper } from "@material-ui/core";
+import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
+import { Tooltip } from "@material-ui/core";
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: 'block',
-    flexWrap: 'wrap',
-    '& > *': {
+    display: "block",
+    flexWrap: "wrap",
+    "& > *": {
       margin: theme.spacing(1),
       width: theme.spacing(30),
       height: theme.spacing(35),
     },
   },
   details: {
-    font: 'Roboto',
-    fontFamily: 'Roboto',
     fontWeight: 700,
     fontSize: 21,
-    color: '#000000',
   },
   det: {
-    font: 'Roboto',
-    fontFamily: 'Roboto',
     fontWeight: 400,
     fontSize: 13,
-    color: '#000000',
+
     lineHeight: 2,
   },
   detOptions: {
-    font: 'Roboto',
-    fontFamily: 'Roboto',
     fontWeight: 400,
     fontSize: 20,
-    color: '#000000',
   },
 }));
 
@@ -54,7 +44,7 @@ export default function Details(props) {
                   <EditOutlinedIcon
                     onClick={handleOnEditDetailsClick}
                     fontSize="small"
-                    style={{ color: '#FF6500' }}
+                    style={{ color: "#FF6500" }}
                   />
                 </Tooltip>
               </Typography>

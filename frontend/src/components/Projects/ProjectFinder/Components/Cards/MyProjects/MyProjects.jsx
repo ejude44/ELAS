@@ -1,18 +1,15 @@
 import * as React from "react";
-
 import { Card } from "@material-ui/core";
 import { CardHeader } from "@material-ui/core";
 import { CardMedia } from "@material-ui/core";
 import { CardContent } from "@material-ui/core";
 import { CardActionArea } from "@material-ui/core";
-
 import { Typography } from "@material-ui/core";
 import { Grid } from "@material-ui/core";
 import { Box } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { imgProject } from "../../../reuse/reuse";
 import { makeStyles } from "@material-ui/styles";
-import { useProjectMembers } from "../../../api/user/hooks";
 import AvatarMyProject from "../../AvatarMyProject/AvatarMyProject";
 import { useProjectTeamMembers } from "../../../api/project/hooks";
 import { CircularProgress } from "@material-ui/core";
@@ -58,7 +55,6 @@ const useStyles = makeStyles({
 });
 
 export default function MyProjects({ filteredProject, handleOpen }) {
-  const { members } = useProjectMembers(filteredProject.id);
   const { teamMembers } = useProjectTeamMembers(filteredProject.id);
   const { MEM } = useMyMembershipStatus(filteredProject.id, null);
   const [appMem, setAppMem] = useState();
@@ -67,6 +63,7 @@ export default function MyProjects({ filteredProject, handleOpen }) {
     if (MEM !== undefined) {
       const mems = MEM.filter(
         (mem) =>
+          // eslint-disable-next-line eqeqeq
           mem.status === "pending" && mem.project_id == filteredProject.id
       );
       setAppMem(mems);
@@ -77,13 +74,11 @@ export default function MyProjects({ filteredProject, handleOpen }) {
 
   return (
     <>
-      <Card
-        style={{ borderRadius: 5, width: 310, height: 280 }}
-        className={customClasses.Card}
-      >
+      <Card style={{ borderRadius: 5 }} className={customClasses.Card}>
         <CardMedia
+          style={{ padding: 5 }}
           component="img"
-          height="80"
+          // height="80"
           alt="projects"
           src={imgProject}
         />
@@ -97,7 +92,7 @@ export default function MyProjects({ filteredProject, handleOpen }) {
           </Typography>
           <Grid item>
             <Typography className={classes.applications}>
-              # New Application(s){" "}
+              #New Application(s) :
               {appMem ? appMem.length : "no applications yet"}
             </Typography>
           </Grid>

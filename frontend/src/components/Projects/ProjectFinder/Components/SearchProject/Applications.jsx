@@ -31,9 +31,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "right",
     marginTop: 10,
   },
-  // box: {
-  //   display: "flex",
-  // },
+
   root: {
     width: "100%",
   },
@@ -51,7 +49,6 @@ export default function ApplicationsS() {
   const [open, setOpen] = useState();
   const [isApplications, setIsApplications] = useState(false);
   const [loadedProjects, setLoadedProjects] = useState([]);
-
   const { projects } = useUserMemberships(userCtx.id);
   const [filterProj, setFilterProj] = useState(loadedProjects);
   const [state, setState] = useState({
@@ -122,12 +119,10 @@ export default function ApplicationsS() {
                   </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                  {/* <Box className={classes.filter}> */}
                   <FormControl
                     component="fieldset"
                     className={classes.formControl}
                   >
-                    {/* <FormLabel component="legend">Filter Projects</FormLabel> */}
                     <FormGroup>
                       <FormControlLabel
                         control={
@@ -181,7 +176,7 @@ export default function ApplicationsS() {
                 {count} project(s) found
               </Typography>
             </Grid>
-            <Grid container spacing={2}>
+            <Grid container spacing={3}>
               {filterProj.map((filteredProject, index) => (
                 <Grid item key={index} xs={12} md={4} sm={4}>
                   <ProjectsCard
@@ -195,9 +190,7 @@ export default function ApplicationsS() {
             </Grid>
           </Container>
         ) : (
-          <Box sx={{ display: "flex" }}>
-            <CircularProgress />
-          </Box>
+          <CircularProgress />
         )}
 
         {open && (

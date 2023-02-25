@@ -1,28 +1,28 @@
-import React from 'react';
-import Backdrop from '@material-ui/core/Backdrop';
-import { Box, Button, Grid, Paper, Typography } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import { useState } from 'react';
-import Stepper from '@material-ui/core/Stepper';
-import Step from '@material-ui/core/Step';
-import StepLabel from '@material-ui/core/StepLabel';
-import TitleAndDetails from '../NewProjectForm/TitleAndDetail';
-import DescriptionAndSkills from '../NewProjectForm/DescriptionAndSkills';
-import { Tooltip } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
-import { useCreateProject } from '../../api/project/hooks';
-import { useContext } from 'react';
-import AuthContext from '../../Store/AuthContext';
-import { useHistory } from 'react-router-dom';
+import React from "react";
+import Backdrop from "@material-ui/core/Backdrop";
+import {  Button, Grid, Paper, Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import { useState } from "react";
+import Stepper from "@material-ui/core/Stepper";
+import Step from "@material-ui/core/Step";
+import StepLabel from "@material-ui/core/StepLabel";
+import TitleAndDetails from "../NewProjectForm/TitleAndDetail";
+import DescriptionAndSkills from "../NewProjectForm/DescriptionAndSkills";
+import { Tooltip } from "@material-ui/core";
+import CloseIcon from "@material-ui/icons/Close";
+import { useCreateProject } from "../../api/project/hooks";
+import { useContext } from "react";
+import AuthContext from "../../Store/AuthContext";
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: '100%',
+    width: "100%",
   },
   button: {
     marginRight: theme.spacing(1),
-    backgroundColor: '#FF6500',
-    color: 'white',
+    backgroundColor: "#FF6500",
+    color: "white",
   },
   instructions: {
     marginTop: theme.spacing(1),
@@ -30,26 +30,25 @@ const useStyles = makeStyles((theme) => ({
   },
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
-    color: '#fff',
+    color: "#fff",
   },
   rootPaper: {
-    display: 'block',
-    flexWrap: 'wrap',
-    '& > *': {
+    display: "block",
+    flexWrap: "wrap",
+    "& > *": {
       margin: theme.spacing(1),
       width: theme.spacing(50),
-      height: 'inherit',
+      height: "inherit",
     },
   },
   span: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    alignItems: 'right',
+    display: "flex",
+    justifyContent: "flex-end",
+    alignItems: "right",
   },
 }));
 
 export default function NewProject(props) {
-  const history = useHistory();
   const authCtx = useContext(AuthContext);
 
   const {
@@ -65,37 +64,36 @@ export default function NewProject(props) {
 
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
-  const [errorCreateProject, setErrorCreateProject] = useState('');
   const [value, setValue] = useState({
-    'title': '',
-    'faculty': '',
-    'degree': '',
-    'maxMembers': '',
-    'description': '',
-    'skills': '',
-    'titleError': {
+    title: "",
+    faculty: "",
+    degree: "",
+    maxMembers: "",
+    description: "",
+    skills: "",
+    titleError: {
       error: false,
-      message: '',
+      message: "",
     },
-    'descriptionError': {
+    descriptionError: {
       error: false,
-      message: '',
+      message: "",
     },
-    'facultyError': {
+    facultyError: {
       error: false,
-      message: '',
+      message: "",
     },
-    'degreeError': {
+    degreeError: {
       error: false,
-      message: '',
+      message: "",
     },
-    'skillsError': {
+    skillsError: {
       error: false,
-      message: '',
+      message: "",
     },
-    'maxMembersError': {
+    maxMembersError: {
       error: false,
-      message: '',
+      message: "",
     },
   });
 
@@ -105,7 +103,7 @@ export default function NewProject(props) {
         ...value,
         titleError: {
           error: true,
-          message: 'title cannot be empty',
+          message: "title cannot be empty",
         },
       });
       return false;
@@ -114,7 +112,7 @@ export default function NewProject(props) {
         ...value,
         facultyError: {
           error: true,
-          message: 'faculty cannot be empty',
+          message: "faculty cannot be empty",
         },
       });
       return false;
@@ -123,7 +121,7 @@ export default function NewProject(props) {
         ...value,
         degreeError: {
           error: true,
-          message: 'degree cannot be empty',
+          message: "degree cannot be empty",
         },
       });
       return false;
@@ -132,7 +130,7 @@ export default function NewProject(props) {
         ...value,
         maxMembersError: {
           error: true,
-          message: 'plese select project maximum members',
+          message: "plese select project maximum members",
         },
       });
       return false;
@@ -141,7 +139,7 @@ export default function NewProject(props) {
         ...value,
         descriptionError: {
           error: true,
-          message: 'Please enter description',
+          message: "Please enter description",
         },
       });
       return true;
@@ -150,7 +148,7 @@ export default function NewProject(props) {
         ...value,
         skillsError: {
           error: true,
-          message: 'enter skills',
+          message: "enter skills",
         },
       });
       return true;
@@ -158,7 +156,7 @@ export default function NewProject(props) {
   };
 
   function getSteps() {
-    return ['Title & Details', 'Description and Skills', 'Create Project'];
+    return ["Title & Details", "Description and Skills", "Create Project"];
   }
 
   function getStepContent(step) {
@@ -168,9 +166,9 @@ export default function NewProject(props) {
       case 1:
         return <DescriptionAndSkills props={{ value, setValue }} />;
       case 2:
-        return 'You are all set!, Click finish to create your Project';
+        return "You are all set!, Click finish to create your Project";
       default:
-        return 'Unknown step';
+        return "Unknown step";
     }
   }
 
@@ -222,9 +220,13 @@ export default function NewProject(props) {
   };
 
   const handleFinised = async () => {
-    await createProject(value, authCtx.token);
-    await getLoggedInUserProjects();
-    setOpenNewProject(false);
+    const create = await createProject(value, authCtx.token);
+    if (create.success) {
+      await getLoggedInUserProjects();
+      setOpenNewProject(false);
+    } else {
+      return;
+    }
   };
 
   return (
@@ -307,7 +309,7 @@ export default function NewProject(props) {
                         {activeStep === steps.length - 1 ? (
                           <span onClick={handleFinised}>Finish</span>
                         ) : (
-                          'Next'
+                          "Next"
                         )}
                       </Button>
                     </div>

@@ -1,93 +1,73 @@
 import {
   Typography,
-  Container,
-  Box,
   Grid,
   Divider,
   makeStyles,
   TextField,
-  Input,
-} from '@material-ui/core';
-
-import { CircularProgress } from '@material-ui/core';
-import { useEffect } from 'react';
-import { useState } from 'react';
-import { Avatar } from '@material-ui/core';
-import { deepOrange } from '@material-ui/core/colors';
-import UserContext from '../../Store/UserContext';
-import { useContext } from 'react';
-import SendOutlinedIcon from '@material-ui/icons/SendOutlined';
-import Reply from '../Reply/Reply';
-import { useComments, useCreateComment } from '../../api/discussion/hooks';
-import TimeAgo from 'javascript-time-ago';
-import en from 'javascript-time-ago/locale/en.json';
-import ReactTimeAgo from 'react-time-ago';
-import MoreVertOutlinedIcon from '@material-ui/icons/MoreVertOutlined';
+} from "@material-ui/core";
+import { CircularProgress } from "@material-ui/core";
+import { useState } from "react";
+import { Avatar } from "@material-ui/core";
+import { deepOrange } from "@material-ui/core/colors";
+import UserContext from "../../Store/UserContext";
+import { useContext } from "react";
+import SendOutlinedIcon from "@material-ui/icons/SendOutlined";
+import Reply from "../Reply/Reply";
+import { useCreateComment } from "../../api/discussion/hooks";
+import TimeAgo from "javascript-time-ago";
+import en from "javascript-time-ago/locale/en.json";
+import ReactTimeAgo from "react-time-ago";
+import MoreVertOutlinedIcon from "@material-ui/icons/MoreVertOutlined";
 
 TimeAgo.addLocale(en);
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: 'block',
-    flexWrap: 'wrap',
-    '& > *': {
+    display: "block",
+    flexWrap: "wrap",
+    "& > *": {
       // margin: theme.spacing(1),
       // width: theme.spacing(30),
       // height: theme.spacing(100),
     },
   },
   startDiscussion: {
-    display: 'flex',
+    display: "flex",
   },
   orange: {
     color: theme.palette.getContrastText(deepOrange[500]),
     backgroundColor: deepOrange[500],
   },
   grid: {
-    border: '2px solid grey',
+    border: "2px solid grey",
     borderRadius: 5,
     padding: 4,
-    width: 'inherit',
-
+    width: "inherit",
     margin: 1,
   },
 }));
 
-export default function Comments({ comment, id }) {
+export default function Comments({ comment, id, loadedReplies, refetch }) {
   const userCtx = useContext(UserContext);
-  const { comments, refetch } = useComments(id);
   const { createComment } = useCreateComment(id, userCtx.id);
-  const [loadedReplies, setLoadedReplies] = useState();
-
-  useEffect(() => {
-    if (comments !== undefined && comments !== null) {
-      const hasReply = comments.filter(
-        (comm) => comm.project_id == id && comm.children !== ''
-      );
-      if (hasReply) {
-        setLoadedReplies(hasReply);
-      }
-    }
-  }, [comments]);
-
   const [value, setValue] = useState({
-    comment: '',
+    comment: "",
     user: userCtx.id,
     project_id: id,
     created_at: new Date(),
   });
 
-  const onChange = (event) => {
-    setValue({ ...value, 'comment': event.target.value });
+  const onChangeReply = (event) => {
+    setValue({ ...value, comment: event.target.value });
   };
 
   const handleReply = async (e, parentId) => {
-    if (value.comment === '') {
+    if (value.comment === "") {
       return;
     } else {
       await createComment(value, parentId);
       await refetch();
-      setValue({ ...value, 'comment': '' });
+      setValue({ ...value, comment: "" });
     }
   };
   const classes = useStyles();
@@ -102,13 +82,13 @@ export default function Comments({ comment, id }) {
                 {comment
                   ? Array.from(comment.firstname)[0].toUpperCase() +
                     Array.from(comment.lastname)[0].toUpperCase()
-                  : ''}
+                  : ""}
               </Avatar>
             </Grid>
             <Grid item xs={8}>
               <Grid item>
                 <Typography variant="body1">
-                  {comment.firstname + ' ' + comment.lastname}
+                  {comment.firstname + " " + comment.lastname}
                 </Typography>
               </Grid>
               <Grid item>
@@ -126,7 +106,7 @@ export default function Comments({ comment, id }) {
             </Grid>
             <Grid item xs>
               <MoreVertOutlinedIcon
-                style={{ color: '#FF6500' }}
+                style={{ color: "#FF6500" }}
               ></MoreVertOutlinedIcon>
             </Grid>
           </Grid>
@@ -137,7 +117,6 @@ export default function Comments({ comment, id }) {
           </Grid>
           <Divider></Divider>
           <Typography gutterBottom style={{ fontSize: 12 }}>
-            {' '}
             see comment(s)
           </Typography>
           <Grid item>
@@ -145,28 +124,25 @@ export default function Comments({ comment, id }) {
               <>
                 {loadedReplies.map((reply, index) => (
                   <Grid item key={index}>
-                    <Grid container key={Math.random() * 10}>
-                      {reply.children == comment.id ? (
-                        <Reply reply={reply} />
-                      ) : (
-                        ''
-                      )}
-                    </Grid>
+                    {/* eslint-disable-next-line eqeqeq */}
+                    {reply.children == comment.id ? (
+                      <Reply reply={reply} />
+                    ) : (
+                      ""
+                    )}
                   </Grid>
                 ))}
               </>
             ) : (
-              <Box sx={{ display: 'flex' }}>
-                <CircularProgress />
-              </Box>
+              <CircularProgress />
             )}
           </Grid>
         </Grid>
-        <Grid item style={{ display: 'flex' }}>
+        <Grid item style={{ display: "flex" }}>
           <TextField
             multiline
             rowsMax={2}
-            onChange={onChange}
+            onChange={onChangeReply}
             type="text"
             size="small"
             variant="outlined"
@@ -176,7 +152,7 @@ export default function Comments({ comment, id }) {
             placeholder="Reply to Question"
           />
           <div onClick={(e) => handleReply(e, comment.id)}>
-            <SendOutlinedIcon style={{ color: 'FF6500' }} />
+            <SendOutlinedIcon style={{ color: "FF6500" }} />
           </div>
         </Grid>
       </Grid>

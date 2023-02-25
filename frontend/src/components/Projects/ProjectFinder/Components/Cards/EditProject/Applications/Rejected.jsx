@@ -3,9 +3,7 @@ import { Paper } from '@material-ui/core';
 import * as React from 'react';
 import { CircularProgress } from '@material-ui/core';
 import { deepOrange } from '@material-ui/core/colors';
-
 import RejectedMembers from '../../ApplicationMember/RejectedMembers';
-
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -13,11 +11,8 @@ const useStyles = makeStyles((theme) => ({
     flexWrap: 'wrap',
     '& > *': {
       margin: theme.spacing(1),
-    
     },
   },
- 
- 
   orange: {
     color: theme.palette.getContrastText(deepOrange[500]),
     backgroundColor: deepOrange[500],
@@ -34,14 +29,10 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Rejected(props) {
   const classes = useStyles();
-  const { rejected, setOpen, handleRemove, SETID, setIsClicked, handleAccept } =
+  const { rejected, setOpen, handleRemove, setID, setIsClicked, handleAccept } =
     props;
-
-  
-
   const handleProfile = (g) => {
-    SETID(g);
-
+    setID(g);
     setIsClicked(rejected.find((x) => x.id === g));
   };
 

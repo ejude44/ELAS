@@ -2,12 +2,10 @@ import {
   Grid,
   Typography,
   makeStyles,
-  Box,
   Divider,
   CircularProgress,
 } from '@material-ui/core';
 import { Paper } from '@material-ui/core';
-
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import { Tooltip } from '@material-ui/core';
 import { Chip } from '@material-ui/core';

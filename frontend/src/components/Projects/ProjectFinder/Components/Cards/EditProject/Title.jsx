@@ -1,4 +1,4 @@
-import { Grid, Typography, makeStyles,  } from "@material-ui/core";
+import { Grid, Typography, makeStyles } from "@material-ui/core";
 import { Paper } from "@material-ui/core";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import { Tooltip } from "@material-ui/core";
@@ -17,11 +17,8 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    font: "Roboto",
-    fontFamily: "Roboto",
     fontWeight: 400,
     fontSize: 21,
-    color: "#000000",
   },
 }));
 

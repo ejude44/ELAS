@@ -1,14 +1,14 @@
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import * as React from 'react';
-import { Grid, makeStyles, Typography, Divider } from '@material-ui/core';
-import { Avatar } from '@material-ui/core';
-import IconButton from '@material-ui/core/IconButton';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
-import { blue } from '@material-ui/core/colors';
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import DoneOutlinedIcon from '@material-ui/icons/DoneOutlined';
+import MoreVertIcon from "@material-ui/icons/MoreVert";
+import * as React from "react";
+import { Grid, makeStyles, Typography, Divider } from "@material-ui/core";
+import { Avatar } from "@material-ui/core";
+import IconButton from "@material-ui/core/IconButton";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+import ClearOutlinedIcon from "@material-ui/icons/ClearOutlined";
+import { blue } from "@material-ui/core/colors";
+import VisibilityIcon from "@material-ui/icons/Visibility";
+import DoneOutlinedIcon from "@material-ui/icons/DoneOutlined";
 
 const ITEM_HEIGHT = 48;
 const useStyles = makeStyles((theme) => ({
@@ -26,14 +26,11 @@ export default function ApplicationMember({
   handleReject,
 }) {
   const classes = useStyles();
-
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
-
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -45,12 +42,12 @@ export default function ApplicationMember({
             {filteredMembers
               ? Array.from(filteredMembers.firstname)[0].toUpperCase() +
                 Array.from(filteredMembers.lastname)[0].toUpperCase()
-              : ''}
+              : ""}
           </Avatar>
         </Grid>
         <Grid item xs={8}>
           <Typography>
-            {filteredMembers.firstname + ' ' + filteredMembers.lastname}
+            {filteredMembers.firstname + " " + filteredMembers.lastname}
           </Typography>
         </Grid>
         <Grid item xs={2} onClick={() => handleProfile(filteredMembers.id)}>
@@ -62,7 +59,7 @@ export default function ApplicationMember({
           >
             <MoreVertIcon
               style={{
-                color: '#FF6500',
+                color: "#FF6500",
               }}
             />
           </IconButton>
@@ -76,27 +73,27 @@ export default function ApplicationMember({
             PaperProps={{
               style: {
                 maxHeight: ITEM_HEIGHT * 4.5,
-                width: '20ch',
+                width: "20ch",
               },
             }}
           >
             <MenuItem onClick={handleClose}>
               <span style={{ fontSize: 12 }} onClick={() => setOpen(true)}>
-                {' '}
+                {" "}
                 <VisibilityIcon fontSize="small" /> View Profile
               </span>
             </MenuItem>
 
             <MenuItem onClick={handleClose}>
               <span style={{ fontSize: 12 }} onClick={handleAccept}>
-                <DoneOutlinedIcon fontSize="small" style={{ color: 'green' }} />
+                <DoneOutlinedIcon fontSize="small" style={{ color: "green" }} />
                 Accept Application
               </span>
             </MenuItem>
             <Divider></Divider>
             <MenuItem onClick={handleClose}>
               <span style={{ fontSize: 12 }} onClick={handleReject}>
-                <ClearOutlinedIcon fontSize="small" style={{ color: 'red' }} />
+                <ClearOutlinedIcon fontSize="small" style={{ color: "red" }} />
                 Reject Application
               </span>
             </MenuItem>

@@ -35,15 +35,15 @@ function Alert(props) {
 
 export default function MyProfile() {
   const authCtx = useContext(AuthContext);
-
   const userCtx = useContext(UserContext);
-
   const [status, setStatus] = useState("save");
+  const [desc, setDesc] = useState();
   const [value, setValue] = useState({
     name: "",
     degree: "",
     about: "",
     skills: [],
+    languageSkills: [],
     foto: "",
   });
 
@@ -53,17 +53,24 @@ export default function MyProfile() {
       degree: userCtx.degree,
       about: userCtx.description,
       skills: userCtx.skills,
+      languageSkills: userCtx.languageSkills,
       foto: userCtx.foto,
     });
+    setDesc(userCtx.description);
   }, []);
 
   const { editProfile } = useEditProfile();
 
   const handleSave = async () => {
-    await editProfile(userCtx.id, value, authCtx.token);
+    const save = await editProfile(userCtx.id, value, authCtx.token);
     await userCtx.getLoggedInUser();
-    setStatus("saved");
-    setOpen(true);
+    if (save.success) {
+      setStatus(save.data.sucess);
+      setOpen(true);
+    } else {
+      setStatus(save.data.failed);
+      setOpen(true);
+    }
   };
 
   const classes = useStyles();
@@ -73,7 +80,6 @@ export default function MyProfile() {
     if (reason === "clickaway") {
       return;
     }
-
     setOpen(false);
   };
   return (
@@ -94,7 +100,7 @@ export default function MyProfile() {
 
           <Grid item xs={12} sm={8} lg={4}>
             <AboutMe
-              props={{ setValue, value, handleSave, status, setStatus }}
+              props={{ setValue, value, handleSave, status, setStatus, desc }}
             />
           </Grid>
 
@@ -107,7 +113,7 @@ export default function MyProfile() {
 
         <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
           <Alert onClose={handleClose} severity="success">
-            Changes saved!
+            {status}
           </Alert>
         </Snackbar>
       </Grid>

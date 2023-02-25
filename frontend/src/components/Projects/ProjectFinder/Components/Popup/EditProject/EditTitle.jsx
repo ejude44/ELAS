@@ -1,20 +1,20 @@
-import React from 'react';
-import Backdrop from '@material-ui/core/Backdrop';
-import { Box, Button, Grid, Paper, Typography } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import { useState } from 'react';
-import SaveOutlinedIcon from '@material-ui/icons/SaveOutlined';
-import { TextField } from '@material-ui/core';
+import React from "react";
+import Backdrop from "@material-ui/core/Backdrop";
+import { Box, Button, Grid, Paper, Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import { useState } from "react";
+import SaveOutlinedIcon from "@material-ui/icons/SaveOutlined";
+import { TextField } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
-    color: '#fff',
+    color: "#fff",
   },
   root: {
-    display: 'block',
-    flexWrap: 'wrap',
-    '& > *': {
+    display: "block",
+    flexWrap: "wrap",
+    "& > *": {
       margin: theme.spacing(1),
       width: theme.spacing(50),
       //   height: theme.spacing(10),
@@ -28,7 +28,7 @@ export default function EditTitle(props) {
   useState(() => {}, [open, value.title]);
 
   const handleOnChange = (event) => {
-    setValue({ ...value, 'title': event.target.value });
+    setValue({ ...value, title: event.target.value });
   };
 
   const classes = useStyles();
@@ -36,7 +36,7 @@ export default function EditTitle(props) {
   return (
     <Grid container direction="column">
       <div>
-        <Backdrop className={classes.backdrop} open={open.title}>
+        <Backdrop className={classes.backdrop} open={open.title ? true : false}>
           <Paper className={classes.root}>
             <div style={{ padding: 10 }}>
               <Typography variant="h5" gutterBottom>
@@ -65,8 +65,8 @@ export default function EditTitle(props) {
                 onClick={handleSave}
                 style={{
                   marginLeft: 10,
-                  backgroundColor: '#FF6500',
-                  color: 'white',
+                  backgroundColor: "#FF6500",
+                  color: "white",
                 }}
               >
                 <SaveOutlinedIcon fontSize="small" /> Save

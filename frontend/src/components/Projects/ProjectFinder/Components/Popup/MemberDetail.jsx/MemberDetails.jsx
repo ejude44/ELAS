@@ -1,29 +1,29 @@
-import { Grid, Typography } from '@material-ui/core';
-import { Tooltip } from '@material-ui/core';
-import { Backdrop, Paper } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
-import { makeStyles } from '@material-ui/core';
-import Avatar from '@material-ui/core/Avatar';
-import { Chip } from '@material-ui/core';
-import { CircularProgress } from '@material-ui/core';
+import { Grid, Typography } from "@material-ui/core";
+import { Tooltip } from "@material-ui/core";
+import { Backdrop, Paper } from "@material-ui/core";
+import CloseIcon from "@material-ui/icons/Close";
+import { makeStyles } from "@material-ui/core";
+import Avatar from "@material-ui/core/Avatar";
+import { Chip } from "@material-ui/core";
+import { CircularProgress } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
-    color: '#fff',
+    color: "#fff",
   },
   root: {
-    display: 'block',
-    flexWrap: 'wrap',
-    '& > *': {
+    display: "block",
+    flexWrap: "wrap",
+    "& > *": {
       margin: theme.spacing(1),
       width: theme.spacing(50),
     },
   },
   button: {
     marginRight: theme.spacing(1),
-    backgroundColor: '#FF6500',
-    color: 'white',
+    backgroundColor: "#FF6500",
+    color: "white",
   },
   details: {
     fontWeight: 700,
@@ -34,19 +34,19 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 23,
   },
   span: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    alignItems: 'right',
+    display: "flex",
+    justifyContent: "flex-end",
+    alignItems: "right",
   },
   img: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   },
   name: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   },
   small: {
     width: theme.spacing(3),
@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function MemberDetails(props) {
-  const { open, toggleMemberDetails, selectedMember, isClicked } = props;
+  const { open, toggleMemberDetails, isClicked } = props;
   const classes = useStyles();
 
   return (
@@ -77,18 +77,18 @@ export default function MemberDetails(props) {
             <Grid item className={classes.img}>
               <Avatar
                 alt="profile pic"
-                src={isClicked ? isClicked.foto : ''}
+                src={isClicked ? isClicked.foto : ""}
                 className={classes.large}
               />
             </Grid>
             <Grid item className={classes.name}>
               <Typography className={classes.myName}>
-                {isClicked ? isClicked.firstname : ''}{' '}
-                {isClicked ? isClicked.lastname : ''}
+                {isClicked ? isClicked.firstname : ""}{" "}
+                {isClicked ? isClicked.lastname : ""}
               </Typography>
             </Grid>
             <Typography className={classes.name}>
-              {isClicked ? isClicked.degree : ''}
+              {isClicked ? isClicked.degree : ""}
             </Typography>
             <Grid item>
               <Typography className={classes.details} gutterBottom>
@@ -96,7 +96,7 @@ export default function MemberDetails(props) {
               </Typography>
             </Grid>
             <Grid item>
-              <Typography>{isClicked ? isClicked.description : ''}</Typography>
+              <Typography>{isClicked ? isClicked.description : ""}</Typography>
             </Grid>
 
             <Grid item>
@@ -109,7 +109,27 @@ export default function MemberDetails(props) {
                   <Grid container spacing={1}>
                     {isClicked.skills.map((skill, index) => (
                       <Grid item key={index}>
-                        <Chip label={skill} />
+                        <Chip label={skill} size="small" />
+                      </Grid>
+                    ))}
+                  </Grid>
+                </>
+              ) : (
+                <CircularProgress />
+              )}
+            </Grid>
+
+            <Grid item>
+              <Typography className={classes.details} gutterBottom>
+                Language Skills
+              </Typography>
+
+              {isClicked.languageSkills ? (
+                <>
+                  <Grid container spacing={1}>
+                    {isClicked.languageSkills.map((skill, index) => (
+                      <Grid item key={index}>
+                        <Chip label={skill} size="small" />
                       </Grid>
                     ))}
                   </Grid>

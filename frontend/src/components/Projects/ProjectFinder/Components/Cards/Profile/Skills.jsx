@@ -1,23 +1,17 @@
-import {
-  Box,
-  Grid,
-  TextField,
-  Typography,
-  makeStyles,
-} from "@material-ui/core";
+import { Grid, Typography, makeStyles } from "@material-ui/core";
 import { Paper } from "@material-ui/core";
-import { Button } from "@material-ui/core";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import { Tooltip } from "@material-ui/core";
-import SaveOutlinedIcon from "@material-ui/icons/SaveOutlined";
 import { useState } from "react";
-import { Autocomplete } from "@material-ui/lab";
-import { skills } from "../../../reuse/reuse";
 import Chip from "@material-ui/core/Chip";
 import { CircularProgress } from "@material-ui/core";
 import { useEffect } from "react";
-
+import EditProfileSkills from "../../Popup/EditProfileSkills/EditProfileSkills";
+import UserContext from "../../../Store/UserContext";
+import AuthContext from "../../../Store/AuthContext";
+import { useContext } from "react";
 import { List } from "@material-ui/core";
+import { useEditProfile } from "../../../api/user/hooks";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -51,37 +45,54 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Skills({ props }) {
   const classes = useStyles();
-  const [hideButton, setHideButton] = useState(true);
-
-  const { setValue, value, handleSave, status, setStatus } = props;
+  const [open, setOpen] = useState(false);
+  const { editProfile } = useEditProfile();
+  const authCtx = useContext(AuthContext);
+  const userCtx = useContext(UserContext);
+  const { setValue, value, setStatus } = props;
   const [mySkills, setMySkills] = useState();
+  const [myLanguageSkills, setMyLanguageSkills] = useState();
 
   const onChange = (event, skills) => {
-    // setValue({ ...value, 'skills': event.target.value });
     setValue({ ...value, skills: skills });
 
-    setHideButton(false);
     setStatus("save");
   };
-  const onKeyDown = (event) => {
-    if (event.key === "Enter" || event.key === "Escape") {
-      event.target.blur();
+
+  const onLanguageSkillsChange = (event, lang) => {
+    setValue({ ...value, languageSkills: lang });
+  };
+
+  const handleSave = async () => {
+    if (value.skills === [] || value.languageSkills === []) {
+      setOpen(false);
+      return;
+    } else {
+      const save = await editProfile(userCtx.id, value, authCtx.token);
+      await userCtx.getLoggedInUser();
+      if (save.success) {
+        setStatus(save.data.sucess);
+        setOpen(false);
+      } else {
+        setStatus(save.data.failed);
+      }
     }
   };
 
-  const onBlur = (event) => {
-    if (event.target.value.trim() === "") {
-      return;
-      // setValue(value.skills);
-    } else {
-      setValue({ ...value, skills: event.target.value });
-    }
-    setHideButton(true);
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   useEffect(() => {
     if (value.skills !== undefined) {
       setMySkills(value.skills);
+    }
+    if (value.languageSkills !== undefined) {
+      setMyLanguageSkills(value.languageSkills);
     }
   }, [value]);
 
@@ -96,43 +107,39 @@ export default function Skills({ props }) {
             <div style={{ padding: 5 }}>
               <Typography className={classes.profileSkills}>
                 Skills
-                <Tooltip title="click  on the Text to begin editing">
+                <Tooltip title="click  to begin Editing skills">
                   <EditOutlinedIcon
+                    onClick={handleOpen}
                     fontSize="small"
                     style={{ color: "#FF6500" }}
                   />
                 </Tooltip>
               </Typography>
+
               <Grid item>
-                <Autocomplete
-                  multiple
-                  onChange={onChange}
-                  onBlur={onBlur}
-                  id="tags-standard"
-                  options={skills}
-                  size="small"
-                  freeSolo
-                  getOptionLabel={(option) => option}
-                  // defaultValue={skills ? skills : value.skills}
-                  // defaultValue={skills ? skills : value.skills}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      variant="standard"
-                      label="search for  Skills"
-                      placeholder="Add Skills"
-                      className={classes.skillsBox}
-                    />
-                  )}
-                />
+                <Typography gutterBottom>Computer skills</Typography>
+                {mySkills ? (
+                  <>
+                    <Grid container spacing={1}>
+                      {mySkills.map((skill, index) => (
+                        <Grid item key={index}>
+                          <Chip label={skill} size="small" />
+                        </Grid>
+                      ))}
+                    </Grid>
+                  </>
+                ) : (
+                  <CircularProgress />
+                )}
               </Grid>
 
-              {mySkills ? (
+              <Typography gutterBottom>Language Skills</Typography>
+              {myLanguageSkills ? (
                 <>
                   <Grid container spacing={1}>
-                    {mySkills.map((skill, index) => (
+                    {myLanguageSkills.map((lang, index) => (
                       <Grid item key={index}>
-                        <Chip label={skill} size="small" />
+                        <Chip label={lang} size="small" />
                       </Grid>
                     ))}
                   </Grid>
@@ -140,29 +147,19 @@ export default function Skills({ props }) {
               ) : (
                 <CircularProgress />
               )}
-
-              <Box className={classes.saveSkills}>
-                {!hideButton ? (
-                  <Button
-                    size="small"
-                    variant="contained"
-                    onClick={handleSave}
-                    style={{
-                      marginLeft: 10,
-                      backgroundColor: "#FF6500",
-                      color: "white",
-                    }}
-                  >
-                    <SaveOutlinedIcon fontSize="small" />
-                    {status}
-                  </Button>
-                ) : (
-                  ""
-                )}
-              </Box>
             </div>
           </List>
         </Paper>
+
+        {open && (
+          <EditProfileSkills
+            open={open}
+            handleClose={handleClose}
+            handleSave={handleSave}
+            onChange={onChange}
+            onLanguageSkillsChange={onLanguageSkillsChange}
+          />
+        )}
       </Grid>
     </>
   );

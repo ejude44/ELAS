@@ -1,12 +1,12 @@
 import { Box, Grid, Typography, makeStyles } from "@material-ui/core";
 import { Paper } from "@material-ui/core";
 import { useState } from "react";
-import { TextField } from "@material-ui/core";
 import { Button } from "@material-ui/core";
 import { Tooltip } from "@material-ui/core";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import SaveOutlinedIcon from "@material-ui/icons/SaveOutlined";
 import Avatar from "@material-ui/core/Avatar";
+import AddAPhotoRoundedIcon from "@material-ui/icons/AddAPhotoRounded";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -46,7 +46,6 @@ export default function ProfileCard({ props }) {
   const classes = useStyles();
   const [hide, setHide] = useState(false);
   const [hideButton, setHideButton] = useState(true);
-
   const { value, setValue, handleSave, status, setStatus } = props;
 
   const onChange = (event) => {
@@ -54,9 +53,13 @@ export default function ProfileCard({ props }) {
       ...value,
       degree: event.target.value,
     });
-
     setHideButton(false);
     setStatus("save");
+  };
+
+  const handleCancel = () => {
+    setHideButton(true);
+    setHide(true);
   };
 
   const onChangePic = (event) => {
@@ -87,13 +90,11 @@ export default function ProfileCard({ props }) {
   const onBlurPic = (event) => {
     if (event.target.value.trim() === "") {
       return;
-      // setValue({ 'foto': event.target.value });
     } else {
       setValue({
         ...value,
         foto: event.target.value,
       });
-
       setHide(true);
       // setHideButton(true);
     }
@@ -128,7 +129,10 @@ export default function ProfileCard({ props }) {
                   alt="profile pic"
                   src={value ? value.foto : ""}
                   className={classes.large}
-                />
+                  fontSize="large"
+                >
+                  <AddAPhotoRoundedIcon />
+                </Avatar>
               </Grid>
             </Grid>
             <Grid item className={classes.center}>
@@ -151,19 +155,31 @@ export default function ProfileCard({ props }) {
             <Box className={classes.saveProfile}>
               {" "}
               {!hideButton ? (
-                <Button
-                  size="small"
-                  color="primary"
-                  variant="contained"
-                  onClick={handleSave}
-                  style={{
-                    marginLeft: 10,
-                    backgroundColor: "#FF6500",
-                    color: "white",
-                  }}
-                >
-                  <SaveOutlinedIcon fontSize="small" /> {status}
-                </Button>
+                <>
+                  <Button
+                    size="small"
+                    onClick={handleCancel}
+                    variant="outlined"
+                    style={{
+                      marginRight: 2,
+                    }}
+                  >
+                    {status === "saved" ? "Hide" : "Cancel"}
+                  </Button>
+                  <Button
+                    size="small"
+                    color="primary"
+                    variant="contained"
+                    onClick={handleSave}
+                    style={{
+                      marginLeft: 10,
+                      backgroundColor: "#FF6500",
+                      color: "white",
+                    }}
+                  >
+                    <SaveOutlinedIcon fontSize="small" /> {status}
+                  </Button>
+                </>
               ) : (
                 ""
               )}

@@ -38,7 +38,7 @@ def adminUser():
         session.commit()
 
     if  pf_user is None:
-        new_pf_user = ProjectFinder_User(email=email, degree=None, birthday=None,skills=None,profile_image=None,description='')
+        new_pf_user = ProjectFinder_User(email=email, degree="", birthday="",skills="",profile_image="",description='', languageSkills='')
         session.add(new_pf_user)
         session.commit()
         return jsonify({"success": "User registered"})
@@ -93,19 +93,13 @@ def register():
         session.commit()
 
     if  pf_user is None:
-        new_pf_user = ProjectFinder_User(email=email,degree='',birthday='', description='', profile_image='', skills='')
+        new_pf_user = ProjectFinder_User(email=email,degree='',birthday='', description='', profile_image='', skills='', languageSkills="")
         session.add(new_pf_user)
         session.commit()
         return jsonify({"success": "User registered"})
 
     else:
         return jsonify({"error": "User is already registered"})
-
-    # if  pf_user is None:
-    #     new_pf_user = ProjectFinder_User(id=None,email=email,degree=None,birthday=None, description=None, profile_image=None, skills=None,)
-
-    #     session.add(new_pf_user)
-    #     session.commit()
 
    
 

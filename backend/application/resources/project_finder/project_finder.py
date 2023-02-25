@@ -4,16 +4,13 @@ from orm_interface.base import Base, Session, engine
 from orm_interface.entities.project_finder.projectfinder import Projects, Membership, Discussion, ProjectFinder_User
 from orm_interface.entities.user import User
 from .extensions import bcrypt
-from flask_jwt_extended import create_access_token,jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity
+
+
 
 project_finder = Blueprint("project_finder", __name__)
-
 Base.metadata.create_all(engine)
 session = Session()
-project_finder = Blueprint("project_finder", __name__)
-
-
-
 
 
 #ADD a Project to the DataBase
@@ -25,7 +22,6 @@ def post_project():
     faculty = data["faculty"]
     description = data["description"]
     degree = data["degree"]
-    # status= data["enteredStatus"]
     max_members = data["maxMembers"]
     # projecttype = data["enteredType"]
     skills = data["skills"]
@@ -40,11 +36,11 @@ def post_project():
         max_members=max_members,status='',link= '', skills=skills,type='',
          user_id=current_user_id)
         session.add(new_project)
-        session.commit()
-        
+        session.commit() 
         return jsonify({"sucess":"project posted"})
     else:
          return jsonify({"failed": "project already there"})
+
 
 #Join Project
 @project_finder.route("/memberships/projects/<int:id>", methods=['POST'])
@@ -58,10 +54,9 @@ def join_project(id=None):
         new_membership = Membership(user_id=user_id,project_id=project_id,status=status)
         session.add(new_membership)
         session.commit()
-        return jsonify({"success":"Member request Sent"})
-
+        return jsonify({"success":"Application Sent"})
     else:
-        return jsonify({"failed": "you cannot join are already a member"})
+        return jsonify({"failed": "failed"})
 
 
 #update Application Request
@@ -72,16 +67,13 @@ def accept_application(id=None):
     membership = session.query(Membership).filter(Membership.id== id)
     membership.update({Membership.status:status},synchronize_session=False)   
     session.commit()
-
     return 'success'
 
 #Remove Application Request
 @project_finder.route("/memberships/<int:id>", methods=['DELETE'])
 def remove_application(id=None):
     session.query(Membership).filter(Membership.id== id).delete()
-       
     session.commit()
-
     return 'success'
    
 
@@ -91,12 +83,11 @@ def remove_application(id=None):
 def get_membership_list(id=None):
     if request.method == 'GET':
      users= session.query(User).join(ProjectFinder_User).join(Membership).where(Membership.project_id==id).all()
-     #.all()
      response= [] 
      for i in users:
          for u in i.projectfinder_user:
            for j in u.membership:
-             response.append({'id': i.id,'lastname':i.lastname,'firstname':i.firstname, 'email': u.email,'description': u.description, 'foto':u.profile_image, 'skills': u.skills,
+             response.append({'id': i.id,'lastname':i.lastname,'firstname':i.firstname, 'email': u.email,'description': u.description, 'foto':u.profile_image, 'skills': u.skills,'languageSkills': u.languageSkills,
                'degree': u.degree, 'status':j.status, 'membershipId' : j.id, 'user': j.user_id,'project_id': j.project_id })        
     return jsonify(response)
 
@@ -111,19 +102,17 @@ def get_project_members(id=None):
         for j in i.projectfinder_user:      
           response.append({
           'firstname':i.firstname,
-        'lastname':i.lastname,
-        'email':j.email,
-        'skills':j.skills,
-        'profile_image':j.profile_image,
-        'degree':j.degree,
-        'birthday': j.birthday,
-        'id':i.id,
-        'description':j.description})
-
+          'lastname':i.lastname,
+           'email':j.email,
+           'skills':j.skills,
+            'profile_image':j.profile_image,
+           'degree':j.degree,
+           'birthday': j.birthday,
+            'id':i.id,
+            'description':j.description})
     return jsonify(response)
 
-#SearchProjects applications
-#Get UserProjectMembershipList
+#Get UserProjectsMembershipList
 @project_finder.route("/memberships/users/<int:id>", methods=['GET'])
 def get_user_Project_membership(id=None):
     if request.method == 'GET':
@@ -131,7 +120,6 @@ def get_user_Project_membership(id=None):
         response = []
         for i in projects:          
            for j in i.membership:
-
              response.append({'id': i.id,
                 'title': i.title,'faculty':i.faculty,
                  'description':i.description,
@@ -142,7 +130,6 @@ def get_user_Project_membership(id=None):
                   'type': i.type,
                   'status': j.status
                   })
-
         return jsonify(response)
 
 #Get AcceptedUserProjects
@@ -157,13 +144,12 @@ def get_Accepted_user_Projects(id=None):
         for i in projects:
             response.append({'id': i.id,
             'title': i.title,'faculty':i.faculty,
-        'description':i.description,
-        'degree':i.degree,
-        'skills': i.skills,
-        'maxMembers': i.max_members,
-        'createdBy':i.user_id,
-        'type': i.type})
-
+              'description':i.description,
+               'degree':i.degree,
+               'skills': i.skills,
+              'maxMembers': i.max_members,
+            'createdBy':i.user_id,
+              'type': i.type})
         return jsonify(response)
 
 #Get Project  Team Members
@@ -175,7 +161,6 @@ def get_Project_Team_Members(id=None):
         for i in users:
             for j in i.projectfinder_user:
                response.append({'id': i.id, 'firstname': i.firstname, 'lastname': i.lastname})
-
         return jsonify(response)
 
 
@@ -185,7 +170,6 @@ def get_Project_Team_Members(id=None):
 def get_projects():      
     projects = session.query(Projects).all()   
     response= []
-    #get all the data from data base with join ! 
     for i in projects:
         response.append({"id":i.id,
         'title':i.title,
@@ -197,7 +181,6 @@ def get_projects():
         'createdBy':i.user_id,
         'type': i.type
         })
-
     return jsonify(response)
 
 
@@ -215,26 +198,22 @@ def getUser_by_id(id=None):
         'profile_image':j.profile_image,
         'degree':j.degree,
         'birthday': j.birthday,
-        'description':j.description})
-
+        'description':j.description,
+        'languageSkills':j.languageSkills,
+        })
     return jsonify(response)  
 
    
-#modify on cascade delete   
-# Delete Project  from DataBase
+# Delete a Project  from DataBase
 @project_finder.route('/deleteProject/<int:id>', methods=['GET', 'DELETE'])
 def delete_project_by_id(id=None):
     if request.method == 'DELETE':
         session.query(Projects).where((Projects.id)==id).delete()
-        session.commit()
-        
-        
-        return 'Project Deleted'
-
-    else: return 'invalid request'
+        session.commit()   
+        return  jsonify({"sucess": "project deleted"})
+    else: return  jsonify({"failed": "An error Occured"})
   
 
-# add authentication
 # Edit a Project
 @project_finder.route('/editProject/<int:id>', methods=['GET', 'PUT'])
 @jwt_required(optional=False)
@@ -242,30 +221,24 @@ def edit_project_by_id(id=None):
     if request.method == 'PUT':
         data = request.get_json()
         title = data["title"]
-      
         faculty = data["faculty"]
         description = data["description"]
         degree = data["degree"]
-        status= ''
         max_members = data["maxMembers"]
         projecttype = ''
         skills = data["skills"]
-        link = ''
-        
+        link = '' 
         project = session.query(Projects).filter(Projects.id== id)
         project.update({Projects.title:title},synchronize_session=False)
         project.update({Projects.faculty:faculty},synchronize_session=False)
         project.update({Projects.description:description},synchronize_session=False)
         project.update({Projects.degree:degree},synchronize_session=False)
-        project.update({Projects.status:status},synchronize_session=False)
         project.update({Projects.max_members:max_members},synchronize_session=False)
         project.update({Projects.type:projecttype},synchronize_session=False)
         project.update({Projects.skills:skills},synchronize_session=False)
         project.update({Projects.link:link},synchronize_session=False)
-         
         session.commit()
-        
-        return jsonify({"sucesss": "project edited"})
+        return jsonify({"sucess": "project edited"})
     else:
          return jsonify({"failed": "project not edited"})
 
@@ -280,19 +253,17 @@ def edit_profile(id=None):
         foto= data["foto"]
         about= data["about"]
         skills = data["skills"]
-      
-        # user = session.query(User).filter(User.id== id)
+        languageSkills = data["languageSkills"]
         pf_user =  session.query(ProjectFinder_User).filter(ProjectFinder_User.id== id)
         pf_user.update({ProjectFinder_User.degree:degree},synchronize_session=False)
         pf_user.update({ProjectFinder_User.description:about},synchronize_session=False)
         pf_user.update({ProjectFinder_User.skills:skills},synchronize_session=False)
         pf_user.update({ProjectFinder_User.profile_image:foto},synchronize_session=False)        
+        pf_user.update({ProjectFinder_User.languageSkills:languageSkills},synchronize_session=False)  
         session.commit()
-        return jsonify({"sucesss": "profile edited"})
+        return jsonify({"sucess": "saved"})
     else:
          return jsonify({"failed": "an error occurred"})
-
-
 
 
 #create a Comment 
@@ -310,7 +281,7 @@ def create_comment(id= None):
         session.commit()
         return jsonify({"sucess":"discussion posted"})
     else:
-         return jsonify({"failed": "project already there"})
+         return jsonify({"failed": "failed"})
 
 
 
@@ -321,9 +292,8 @@ def get_comment(id= None):
     response=[]
     for i in comment:
       for j in i.projectfinder_user:
-          for u in j.discussion:
-         
-           response.append({"id":i.id,
+          for u in j.discussion:        
+           response.append({"id":u.id,
         'user_id':u.user_id,
         'project_id': u.project_id,
         'created_at':u.created_at,
@@ -336,20 +306,17 @@ def get_comment(id= None):
 
 
 
-
-
 #GetLogged in UserId
 @project_finder.route("/home")
 @jwt_required(optional=False)
 def getLoggedInUserId():
     current_user = get_jwt_identity()
     current_user_id = current_user["id"]
-    # user = session.query(User).where((User.id)==current_user_id)
     user = session.query(User).join(ProjectFinder_User).where(ProjectFinder_User.id == current_user_id)
     response=[]
     for i in user:
         for j in i.projectfinder_user:
-              response.append({"id":i.id,
+            response.append({"id":i.id,
         'firstname':i.firstname,
         'lastname':i.lastname,
         'email':j.email,
@@ -357,7 +324,8 @@ def getLoggedInUserId():
         'degree':j.degree,
         'birthday': j.birthday,
         'description':j.description,
-        'skills': j.skills})
+        'skills': j.skills,
+        'languageSkills': j.languageSkills})
     return jsonify(response)
 
 
@@ -373,7 +341,7 @@ def get_by_id(id=None):
         'description':i.description,
         'degree':i.degree,
         'max_members': i.max_members,
-        'status': i.status,
+        # 'status': i.status,
         'createdBy': i.user_id,
         "type":i.type,
         'link': i.link,
@@ -390,9 +358,7 @@ def get_by_id(id=None):
 def get_by_user_id(user_id= None):
     current_user = get_jwt_identity()
     current_user_id = current_user["id"]  
-   
     projects = session.query(Projects).where((Projects.user_id)== current_user_id)
-   
     response=[]
     for i in projects:
         response.append({"id":i.id,
@@ -401,18 +367,11 @@ def get_by_user_id(user_id= None):
         'description':i.description,
         'degree':i.degree,
         'max_members': i.max_members,
-        'status': i.status,
+        # 'status': i.status,
         'createdBy': i.user_id,
         "type":i.type,
         'link': i.link,
         'skills': i.skills,
         'user_id':i.user_id
-
         })
-
     return jsonify(response)
-
-
-
-basedir = os.path.abspath(os.path.dirname(__file__))
-    

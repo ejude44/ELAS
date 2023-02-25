@@ -1,23 +1,20 @@
-import { useState, useEffect, useContext } from 'react';
-
-// import UserContext from '../user/context'
+import { useState, useEffect } from "react";
 import {
   GetCommentsRequest,
   CreateCommentRequest,
   DeleteCommentRequest,
-} from './requests';
+} from "./requests";
 
+/**All hooks related to Discussion */
 
 export function nestComments(comments) {
   let threads = {};
-
   for (const comment of comments) {
     if (comment.parent) {
       threads[comment.parent] = threads[comment.parent] ?? [];
       threads[comment.parent].push(comment);
     }
   }
-
   for (let i = comments.length - 1; i >= 0; i--) {
     const comment = comments[i];
     if (threads[comment._id]) {
@@ -29,9 +26,9 @@ export function nestComments(comments) {
   return comments.filter((comment) => !comment.parent);
 }
 
+/** Get comments hooks*/
 export function useComments(projectId) {
   const [result, setResult] = useState(null);
-
   const refetch = async () => {
     if (projectId) {
       const result = await GetCommentsRequest({ projectId });
@@ -43,7 +40,6 @@ export function useComments(projectId) {
       setResult(null);
     }
   };
-
   useEffect(() => {
     refetch();
   }, [projectId]);
@@ -51,9 +47,8 @@ export function useComments(projectId) {
   return { result, comments: result?.data, refetch };
 }
 
+/**Create comment hooks */
 export function useCreateComment(projectId, userId) {
-  // const { us } = useGetUserById(userId)
-
   const createComment = async (body, parent) => {
     return await CreateCommentRequest({
       projectId,
@@ -66,12 +61,11 @@ export function useCreateComment(projectId, userId) {
   return { createComment };
 }
 
+/** Delete comment Hooks*/
 export function useDeleteComment() {
   const [result, setResult] = useState(null);
-
   const deleteComment = async (commentId) => {
     setResult(await DeleteCommentRequest({ commentId }));
   };
-
   return { deleteComment, result };
 }

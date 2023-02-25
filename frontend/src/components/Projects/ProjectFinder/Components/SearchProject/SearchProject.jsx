@@ -2,26 +2,22 @@ import {
   Typography,
   Grid,
   Divider,
-  Box,
   TextField,
   Container,
-} from '@material-ui/core';
-import { useState, useEffect } from 'react';
-import { CircularProgress } from '@material-ui/core';
-import SearchIcon from '@material-ui/icons/Search';
-import { InputAdornment } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core';
-import { useProjects } from '../../api/project/hooks';
-import ProjectsCard from '../Cards/ProjectsCard/ProjectsCard';
-import ProjectDetail from '../Popup/ProjectDetail';
+} from "@material-ui/core";
+import { useState, useEffect } from "react";
+import { CircularProgress } from "@material-ui/core";
+import SearchIcon from "@material-ui/icons/Search";
+import { InputAdornment } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
+import { useProjects } from "../../api/project/hooks";
+import ProjectsCard from "../Cards/ProjectsCard/ProjectsCard";
+import ProjectDetail from "../Popup/ProjectDetail";
 
 const useStyles = makeStyles({
   projectsFound: {
-    font: 'Roboto',
-    fontFamily: 'Roboto',
     fontWeight: 400,
     fontSize: 15,
-    lineHeight: 3,
   },
 });
 
@@ -29,12 +25,18 @@ export default function SearchProjectsComp() {
   const classes = useStyles();
   const { projects } = useProjects();
   const [loadedProjects, setLoadedProjects] = useState([]);
-  const [filteredProjects, setFilteredProjects] = useState(loadedProjects);
+  const [filteredProjects, setFilteredProjects] = useState([]);
   const [notFound, setNotFound] = useState(false);
   const [count, setCount] = useState();
 
   const [isClicked, setIsClicked] = useState();
   const [open, setOpen] = useState();
+
+  // const [projectSearch, setProjectSearch] = useState("");
+
+  // const handleProjectSearch = (event) => {
+  //   setProjectSearch(event.target.value);
+  // };
 
   useEffect(() => {
     setLoadedProjects(projects);
@@ -42,13 +44,13 @@ export default function SearchProjectsComp() {
     if (filteredProjects !== undefined) {
       setCount(filteredProjects.length);
     }
-  }, [projects, count, loadedProjects, setCount, filteredProjects]);
+  }, [projects, count, loadedProjects, setCount]);
 
   const handleSearch = (event) => {
     let value = event.target.value;
     let result = [];
     result = loadedProjects.filter((data) => {
-      return data.description.concat(data.title).search(value) !== -1;
+      return data.title.concat(data.description).search(value) !== -1;
     });
     if (result.length <= 0) {
       setNotFound(true);
@@ -60,7 +62,7 @@ export default function SearchProjectsComp() {
   };
 
   const handleOpen = (id) => {
-    setIsClicked(filteredProjects.find((x) => x.id === id));
+    setIsClicked(projects.find((x) => x.id === id));
     setOpen(true);
   };
 
@@ -73,13 +75,15 @@ export default function SearchProjectsComp() {
     <Grid container direction="column">
       <TextField
         placeholder="Search by Keywords"
+        // value={projectSearch}
+        // onChange={handleProjectSearch}
         onChange={(event) => handleSearch(event)}
         variant="outlined"
-        style={{ backgroundColor: '#fff', margin: 20 }}
+        style={{ backgroundColor: "#fff", margin: 20 }}
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
-              <SearchIcon style={{ color: '#909090' }} />
+              <SearchIcon style={{ color: "#909090" }} />
             </InputAdornment>
           ),
         }}
@@ -90,10 +94,10 @@ export default function SearchProjectsComp() {
       <Grid item>
         {filteredProjects ? (
           <Container>
-            <Typography className={classes.projectsFound}>
+            <Typography className={classes.projectsFound} gutterBottom>
               {count} project(s) found
             </Typography>
-            <Grid container spacing={2}>
+            <Grid container spacing={3}>
               {filteredProjects.map((filteredProject) => (
                 <Grid item key={filteredProject.id} xs={12} md={4} sm={4}>
                   <ProjectsCard
@@ -102,15 +106,30 @@ export default function SearchProjectsComp() {
                   />
                 </Grid>
               ))}
+              {/* {projects.map((details, index) => {
+                let nameToSearch = details.title
+                  .concat(details.description)
+                  .toLowerCase();
+                const found = nameToSearch.includes(projectSearch);
+
+                if (found) {
+                  return (
+                    <Grid item key={index}>
+                      <ProjectsCard
+                        filteredProject={details}
+                        handleOpen={handleOpen}
+                      />
+                    </Grid>
+                  );
+                } else return "";
+              })} */}
             </Grid>
           </Container>
         ) : (
-          <Box sx={{ display: 'flex' }}>
-            <CircularProgress />
-          </Box>
+          <CircularProgress />
         )}
       </Grid>
-      {notFound ? 'No results found' : ''}
+      {notFound ? "No results found" : ""}
 
       {open && (
         <ProjectDetail

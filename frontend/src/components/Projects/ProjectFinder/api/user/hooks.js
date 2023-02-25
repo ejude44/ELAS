@@ -7,13 +7,15 @@ import {
   EditProfileRequest,
   GetLoggedInUserOtherProjects,
   GetProjectMembers,
-} from './requests';
-import { useState, useEffect, useContext } from 'react';
-import UserContext from '../../Store/UserContext';
+} from "./requests";
+import { useState, useEffect, useContext } from "react";
+import UserContext from "../../Store/UserContext";
 
+/** This file contains all custom hooks related to the user*/
+
+/**Get user by ID hoook */
 export function useGetUserById(userId) {
   const [result, setUser] = useState(null);
-
   const getUserById = async () => {
     if (userId) {
       setUser(await GetUserById({ userId }));
@@ -29,6 +31,7 @@ export function useGetUserById(userId) {
   return { result, us: result?.data, getUserById };
 }
 
+/**Logged in user Details Hook*/
 export function useGetLoggedInUser(token) {
   const [result, setUser] = useState(null);
 
@@ -47,9 +50,9 @@ export function useGetLoggedInUser(token) {
   return { result, user: result?.data, getLoggedInUser };
 }
 
+/** Get logged in user Projects hooks*/
 export function useGetLoggedInUserProjects(userId, token) {
   const [result, setProjects] = useState(null);
-
   const getLoggedInUserProjects = async () => {
     if (token) {
       setProjects(await GetLoggedInUserProjects({ userId, token }));
@@ -57,7 +60,6 @@ export function useGetLoggedInUserProjects(userId, token) {
       setProjects(null);
     }
   };
-
   useEffect(() => {
     getLoggedInUserProjects();
   }, [userId, token]);
@@ -65,9 +67,9 @@ export function useGetLoggedInUserProjects(userId, token) {
   return { result, projects: result?.data, getLoggedInUserProjects };
 }
 
+/**Get logged in user other projects hooks */
 export function useGetLoggedInUserOtherProjects(userId, token) {
   const [result, setProjects] = useState(null);
-
   const getLoggedInUserOtherProjects = async () => {
     if (token) {
       setProjects(await GetLoggedInUserOtherProjects({ userId, token }));
@@ -75,25 +77,23 @@ export function useGetLoggedInUserOtherProjects(userId, token) {
       setProjects(null);
     }
   };
-
   useEffect(() => {
     getLoggedInUserOtherProjects();
   }, [userId, token]);
-
   return { result, otherProjects: result?.data, getLoggedInUserOtherProjects };
 }
 
+/** not implemented*/
 export function useCreateUser() {
   const createUser = async (data) => {
     return await RegisterUser({ data });
   };
-
   return { createUser };
 }
 
+/** User membership hook*/
 export function useUserMemberships(userId) {
   const [result, setResult] = useState(null);
-
   const refetch = async () => {
     if (userId) {
       setResult(await GetUserMembershipsRequest({ userId }));
@@ -101,17 +101,15 @@ export function useUserMemberships(userId) {
       setResult(null);
     }
   };
-
   useEffect(() => {
     refetch();
   }, [userId]);
-
   return { result, projects: result?.data, refetch };
 }
 
+/**Get Project members Hook*/
 export function useProjectMembers(userId) {
   const [result, setResult] = useState(null);
-
   const refetch = async () => {
     if (userId) {
       setResult(await GetProjectMembers({ userId }));
@@ -119,24 +117,22 @@ export function useProjectMembers(userId) {
       setResult(null);
     }
   };
-
   useEffect(() => {
     refetch();
   }, [userId]);
-
   return { result, members: result?.data, refetch };
 }
 
+/** not implemented*/
 export function useCurrentUser() {
   const { user } = useContext(UserContext);
-
   return user;
 }
 
+/** Edit profile hook*/
 export function useEditProfile() {
   const editProfile = async (userId, data, token) => {
     return await EditProfileRequest({ userId, data, token });
   };
-
   return { editProfile };
 }

@@ -1,4 +1,4 @@
-import { Grid, Typography, makeStyles, Box } from '@material-ui/core';
+import { Grid, Typography, makeStyles} from '@material-ui/core';
 import { Paper } from '@material-ui/core';
 import { CircularProgress } from '@material-ui/core';
 import * as React from 'react';
@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Applications(props) {
   const {
     memberships,
-    SETID,
+    setID,
     setOpen,
     setIsClicked,
     handleAccept,
@@ -33,8 +33,7 @@ export default function Applications(props) {
   } = props;
 
   const handleProfile = (g) => {
-    SETID(g);
-
+    setID(g);
     setIsClicked(memberships.find((x) => x.id === g));
   };
 

@@ -1,13 +1,6 @@
 import React from "react";
 import Backdrop from "@material-ui/core/Backdrop";
-import {
-  Box,
-  Button,
-  Divider,
-  Grid,
-  Paper,
-  Typography,
-} from "@material-ui/core";
+import { Button, Divider, Grid, Paper, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { useState } from "react";
 import { Tooltip } from "@material-ui/core";
@@ -55,33 +48,21 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    // font: 'Roboto',
-    // fontFamily: 'Roboto',
+
     fontWeight: 400,
     fontSize: 21,
-    // color: '#000000',
   },
   heading: {
-    // font: 'Roboto',
-    // fontFamily: 'Roboto',
     fontWeight: 700,
     fontSize: 18,
-    // color: '#000000',
   },
   det: {
-    // font: 'Roboto',
-    // fontFamily: 'Roboto',
     fontWeight: 400,
     fontSize: 15,
-    // color: '#000000',
-    // lineHeight: 2,
   },
   detOptions: {
-    // font: 'Roboto',
-    // fontFamily: 'Roboto',
     fontWeight: 400,
     fontSize: 20,
-    // color: '#000000',
   },
   center: {
     display: "flex",
@@ -100,13 +81,11 @@ export default function ProjectDetail(props) {
   const userCtx = useContext(UserContext);
   const { status } = useMyMembershipStatus(id, userCtx.id);
   const [clicked, setClicked] = useState(false);
-
   const { apply } = useApply(id, userCtx.id);
   const classes = useStyles();
-
-  const handleJoinProject = () => {
+  const handleJoinProject = async () => {
     setClicked(true);
-    apply();
+    await apply();
   };
 
   return (
@@ -171,7 +150,8 @@ export default function ProjectDetail(props) {
                         }}
                         disabled
                       >
-                        <DoneOutlinedIcon size="small" /> Application sent
+                        <DoneOutlinedIcon size="small" />
+                        Application Sent
                       </Button>
                     )}
 

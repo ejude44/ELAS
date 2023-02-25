@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 
+/**Context-api for Authentication */
+
 const AuthContext = React.createContext({
   token: "",
   isLoggedIn: false,

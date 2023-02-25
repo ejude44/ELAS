@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import {
   GetProjectsRequest,
   GetProjectRequest,
@@ -12,27 +12,27 @@ import {
   GetProjectTeamMembers,
   GetRejectedTeamMembers,
   RemoveApplicantRequest,
-} from './requests';
+} from "./requests";
 
-import { useGetUserById } from '../user/hooks';
+import { useGetUserById } from "../user/hooks";
 
+/** Files contain all Hooks Associated with Projects */
+
+/**Get projects hooks */
 export function useProjects() {
   const [result, setProjects] = useState(null);
-
   const getProj = async () => {
     setProjects(await GetProjectsRequest());
   };
-
   useEffect(() => {
     getProj();
   }, []);
-
   return { result, projects: result?.data, getProj };
 }
 
+/** Get project hook*/
 export function useProject(projectId) {
   const [result, setProject] = useState(null);
-
   const getProj = async () => {
     if (projectId) {
       setProject(await GetProjectRequest({ projectId }));
@@ -40,51 +40,47 @@ export function useProject(projectId) {
       setProject(null);
     }
   };
-
   useEffect(() => {
     getProj();
   }, [projectId]);
-
   return { result, project: result?.data, getProj };
 }
 
+/**Delete project Hook */
 export function useDeleteProject() {
   const deleteProject = async (projectId) => {
     return await DeleteProjectRequest({ projectId });
   };
-
   return { deleteProject };
 }
 
+/**Edit project Hook */
 export function useEditProject() {
   const editProject = async (projectId, data, token) => {
     return await EditProjectRequest({ projectId, data, token });
   };
-
   return { editProject };
 }
 
+/**Create Project hook */
 export function useCreateProject() {
   const createProject = async (data, token) => {
     return await CreateProjectRequest({ data, token });
   };
-
   return { createProject };
 }
 
+/** Apply for project hook*/
 export function useApply(projectId, userId) {
-  const [result, setResult] = useState(null);
-
   const apply = async () => {
-    setResult(await ApplyRequest({ projectId, userId }));
+    return await ApplyRequest({ projectId, userId });
   };
-
-  return { apply, result };
+  return { apply };
 }
 
+/** Project memberships hook*/
 export function useProjectMemberships(projectId) {
   const [result, setResult] = useState(null);
-
   const refetch = async () => {
     if (projectId) {
       setResult(await GetProjectMembershipsRequest({ projectId }));
@@ -92,17 +88,15 @@ export function useProjectMemberships(projectId) {
       setResult(null);
     }
   };
-
   useEffect(() => {
     refetch();
   }, [projectId]);
-
   return { result, memberships: result?.data, refetch };
 }
 
+/**Get project team mebers not implemented */
 export function useProjectTeamMembers(projectId) {
   const [result, setResult] = useState(null);
-
   const refetch = async () => {
     if (projectId) {
       setResult(await GetProjectTeamMembers({ projectId }));
@@ -110,17 +104,14 @@ export function useProjectTeamMembers(projectId) {
       setResult(null);
     }
   };
-
   useEffect(() => {
     refetch();
   }, [projectId]);
-
   return { result, teamMembers: result?.data, refetch };
 }
 
 export function useRejectedTeamMembers(projectId) {
   const [result, setResult] = useState(null);
-
   const refetch = async () => {
     if (projectId) {
       setResult(await GetRejectedTeamMembers({ projectId }));
@@ -128,35 +119,32 @@ export function useRejectedTeamMembers(projectId) {
       setResult(null);
     }
   };
-
   useEffect(() => {
     refetch();
   }, [projectId]);
-
   return { result, rejectedMembers: result?.data, refetch };
 }
 
+/**Project membership status hook */
 export function useMyMembershipStatus(projectId, userId) {
   const { memberships, refetch } = useProjectMemberships(projectId);
   const { us } = useGetUserById(userId);
-
-  // const [isMember, setIsMember] = useState(Boolean);
   const [status, setStatus] = useState(null);
   const [memId, setMemId] = useState(null);
-
   useEffect(() => {
     if (!memberships) {
       return;
     } else if (memberships) {
       const it = memberships.find(
+        // eslint-disable-next-line eqeqeq
         (me) => me.project_id == projectId && me.user == userId
       );
-
       if (it) {
         setMemId(it.membershipId);
         setStatus(it.status);
       }
       const membership = memberships.find(
+        // eslint-disable-next-line eqeqeq
         (membership) => membership.id == userId
       );
 
@@ -164,7 +152,7 @@ export function useMyMembershipStatus(projectId, userId) {
         return;
         // setStatus('Application sent');
       } else if (!membership) {
-        setStatus('Send Application');
+        setStatus("Send Application");
       }
     }
   }, [memberships, us, status, memId, refetch]);
@@ -172,26 +160,26 @@ export function useMyMembershipStatus(projectId, userId) {
   return { MEM: memberships, USER: us, status, memId, refetch };
 }
 
+/**Accept applicant hoook */
 export function useAcceptApplicant() {
   const accept = async (membershipId) => {
     return await AcceptApplicantRequest({ membershipId });
   };
-
   return { accept };
 }
 
+/** Reject applicant hook*/
 export function useRejectApplicant() {
   const reject = async (membershipId) => {
     return await RejectApplicantRequest({ membershipId });
   };
-
   return { reject };
 }
 
+/**Remove applicant hook */
 export function useRemoveApplicant() {
   const remove = async (membershipId) => {
     return await RemoveApplicantRequest({ membershipId });
   };
-
   return { remove };
 }

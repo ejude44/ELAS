@@ -4,9 +4,7 @@ import Title from "../Cards/EditProject/Title";
 import Details from "../Cards/EditProject/Details";
 import DescriptionAndSkills from "../Cards/EditProject/DescriptionAndSkills";
 import Discussion from "../Cards/EditProject/Discussion";
-
 import EditTitle from "../Popup/EditProject/EditTitle";
-
 import EditDetails from "../Popup/EditProject/EditDetails";
 import EditDescSkills from "../Popup/EditProject/EditDescSkills";
 
