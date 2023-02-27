@@ -28,7 +28,6 @@ export default function SearchProjectsComp() {
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [notFound, setNotFound] = useState(false);
   const [count, setCount] = useState();
-
   const [isClicked, setIsClicked] = useState();
   const [open, setOpen] = useState();
 

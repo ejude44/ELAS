@@ -8,7 +8,6 @@ import yaml
 from multiprocessing import Process
 load_dotenv()
 from datetime import timedelta
-
 from orm_interface.entities.user import User
 from orm_interface.base import Base, Session, engine
 from orm_interface.entities.e3_entity.e3_courses import E3_Courses, E3_Rating

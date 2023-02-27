@@ -33,7 +33,6 @@ export async function fetchJson(path, method, data = null, token = null) {
     },
     body: data ? JSON.stringify(data) : null,
   });
-
   return await makeJsonResult(response);
 }
 

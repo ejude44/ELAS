@@ -17,13 +17,20 @@ The goal of this project is to give Students a plattform for making Project/ Pro
 
 ![image](https://i.imgur.com/KRzMkwt.png)
 
-- Dashbord
+- Dashbord- First time log in Showcases owned Project and Projects which the logged user is a member of.
 
 ![image](https://i.imgur.com/NUM2PIC.png)
 
-- Edit Project Applications
+- Edit Project Applications- To manage created project as well as well as
+  accept and or reject project membership applications.
+
+  ![image](https://i.imgur.com/Nf0npuZ.png)
+
+  - Profile Page- To manage the logged in user datails.
 
 ### 🚀 Get Started / Installation Guide
+
+## If Possible, run all installation commands using the command shell in Admin mode.
 
 1. Manual Installation Guide 🔨
 
@@ -64,7 +71,15 @@ The goal of this project is to give Students a plattform for making Project/ Pro
 
      # You may need to manually install some dependencies.
 
-     - Rename the files `example.env` to `.env` and `example.flaskenv` to `.flaskenv` respectively
+     - If you encounter problems installing the requirements with regards to
+       hdbscan make sure you have the latest version of Mircosoft
+       visuall ++ installed.
+
+       Get it here: [Microsoft Visual](https://visualstudio.microsoft.com/visual-cpp-build-tools/)
+
+     - Rename the files `example.env` to `.env` and `example.flaskenv` to `.flaskenv` respectively in backend folder
+
+     - Rename the file 'example.env' to `.env` in Frontend folder
 
      - Open `.env` file, find `POSTGRES_PASS`, and type the password of your postgresql database between the single
        quotation mark

@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey,DateTime,ARRAY
 from orm_interface.base import Base
 from sqlalchemy.orm import relationship
 
+# ProjexUser Table
 class ProjectFinder_User(Base):
     __tablename__ = "projectfinder_user"
     id = Column(Integer,  autoincrement=True ,primary_key= True,unique=True)
@@ -26,6 +27,8 @@ class ProjectFinder_User(Base):
         self.description= description
         self.profile_image= profile_image
 
+
+#  Projects Table
 class Projects(Base):
     __tablename__ = "projects"
     id = Column(Integer, primary_key=True, autoincrement=True, unique=True)
@@ -53,7 +56,7 @@ class Projects(Base):
         self.skills = skills
         self.type = type
 
-
+# Membership Table
 class Membership(Base):
     __tablename__ = "membership"
     id = Column(Integer,primary_key=True,autoincrement=True, unique= True)
@@ -66,7 +69,7 @@ class Membership(Base):
         self.project_id= project_id
         self.status = status
 
-
+# Discussion Table
 class Discussion(Base):
     __tablename__ = "discussion"
     id = Column(Integer, primary_key=True, autoincrement=True, unique=True)
